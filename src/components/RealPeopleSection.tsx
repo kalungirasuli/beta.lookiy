@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
+import Image from 'next/image';
 
 export default function RealPeopleSection() {
   // Ref for the section to track when it's in view
@@ -113,10 +114,12 @@ export default function RealPeopleSection() {
         
         {/* SVG Illustration - Hidden on small screens, absolute on larger screens */}
         <div className="hidden md:block absolute right-0 bottom-0 sm:right-5 sm:bottom-5 md:bottom-0 lg:bottom-0 w-80 h-80 md:w-96 md:h-96 lg:w-[28rem] lg:h-[26rem] opacity-70 z-0 pointer-events-none">
-          <img 
+          <Image 
             src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (3).svg" 
             alt="Mental Health Illustration" 
             className="w-full h-full object-contain"
+            width={400}
+            height={400}
           />
         </div>
         
@@ -217,10 +220,12 @@ export default function RealPeopleSection() {
                   
                   {/* SVG Illustration for small screens - after the last card */}
                   <div className="md:hidden mt-8 w-80 h-80 mx-auto opacity-70 z-0 pointer-events-none">
-                    <img 
+                    <Image 
                       src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (3).svg" 
                       alt="Mental Health Illustration" 
                       className="w-full h-full object-contain"
+                      width={300}
+                      height={300}
                     />
                   </div>
                 </div>

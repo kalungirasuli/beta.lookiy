@@ -26,7 +26,7 @@ export default function ImmersiveHero() {
     }, 2000); // Change word every 2 seconds
     
     return () => clearInterval(interval);
-  }, []);
+  }, [vibeWords.length]);
   
   // No initialization needed as we're removing the grid boxes
 

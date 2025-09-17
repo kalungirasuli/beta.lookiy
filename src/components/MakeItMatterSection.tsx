@@ -1,6 +1,7 @@
 'use client';
 
 import { motion, Variants } from 'framer-motion';
+import Image from 'next/image';
 
 export default function MakeItMatterSection() {
   // Animation variants
@@ -27,6 +28,11 @@ export default function MakeItMatterSection() {
       },
     },
   };
+
+
+
+
+
 
   return (
     <section className="w-full py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-12 relative bg-white">
@@ -55,7 +61,7 @@ export default function MakeItMatterSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-black tracking-tight">
-            How You'll <span className="text-gray-200 bg-gray-600 px-2 py-1 rounded-md">Make It Matter</span>
+            How You&apos;ll <span className="text-gray-200 bg-gray-600 px-2 py-1 rounded-md">Make It Matter</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
             Turn connections into opportunities that align with what matters to you
@@ -78,15 +84,17 @@ export default function MakeItMatterSection() {
           >
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-6">
               <div className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 flex-shrink-0">
-                <img 
+                <Image 
                   src="/WFH_svg 3/wfh_1.svg" 
                   alt="Meet Collaborators" 
                   className="w-full h-full object-contain"
+                  width={200}
+                  height={200}
                 />
               </div>
               <div className="text-center md:text-left">
                 <h3 className="text-xl font-bold text-blue-600 mb-2">Meet Collaborators</h3>
-                <p className="text-gray-700 mb-2">LINK UP WITH PEOPLE BUILDING WHAT YOU'RE PASSIONATE ABOUT</p>
+                <p className="text-gray-700 mb-2">LINK UP WITH PEOPLE BUILDING WHAT YOU&apos;RE PASSIONATE ABOUT</p>
                 <p className="text-gray-600">Find like-minded creators and innovators who share your interests and vision.</p>
               </div>
             </div>
@@ -100,10 +108,12 @@ export default function MakeItMatterSection() {
           >
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-6">
               <div className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 flex-shrink-0">
-                <img 
+                <Image 
                   src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (7).svg" 
                   alt="Share Your Story" 
                   className="w-full h-full object-contain"
+                  width={200}
+                  height={200}
                 />
               </div>
               <div className="text-center md:text-left">
@@ -122,10 +132,12 @@ export default function MakeItMatterSection() {
           >
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-6">
               <div className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 flex-shrink-0">
-                <img 
+                <Image 
                   src="/DrawKit - Social Movements Illustration Pack/SVG/4_SOCIAL MEDIA.svg" 
                   alt="Expand Your Circle" 
                   className="w-full h-full object-contain"
+                  width={200}
+                  height={200}
                 />
               </div>
               <div className="text-center md:text-left">
@@ -144,10 +156,12 @@ export default function MakeItMatterSection() {
           >
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-6">
               <div className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 flex-shrink-0">
-                <img 
+                <Image 
                   src="/WFH_svg 3/wfh_8.svg" 
                   alt="Unlock Opportunities" 
                   className="w-full h-full object-contain"
+                  width={200}
+                  height={200}
                 />
               </div>
               <div className="text-center md:text-left">
