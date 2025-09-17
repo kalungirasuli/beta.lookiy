@@ -17,18 +17,6 @@ export default function Footer() {
           >
             Privacy Policy
           </Link>
-          <Link 
-            href="/terms" 
-            className="text-sm text-gray-500 hover:text-accent transition-colors"
-          >
-            Terms of Service
-          </Link>
-          <Link 
-            href="/cookies" 
-            className="text-sm text-gray-500 hover:text-accent transition-colors"
-          >
-            Cookie Policy
-          </Link>
         </div>
       </div>
     </footer>

@@ -22,7 +22,7 @@ export default function Hero() {
             wrapper="span"
             speed={10}
             repeat={Infinity}
-            className="text-accent"
+            className="text-accent text-5xl sm:text-6xl md:text-7xl xl:text-9xl font-bold"
           />
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-gray-700 max-w-2xl mx-auto px-2">

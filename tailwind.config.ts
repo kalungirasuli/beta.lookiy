@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'nunito': ['var(--font-nunito)', 'sans-serif'],
+      },
       colors: {
         primary: '#ffffff',
         accent: '#ff6b00', // Orange accent color

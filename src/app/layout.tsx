@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Nunito_Sans } from "next/font/google";
 import "./globals.css";
+import LoadingProvider from "@/components/LoadingProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,13 +13,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const nunitoSans = Nunito_Sans({
+  variable: "--font-nunito-sans",
+  subsets: ["latin"],
+});
+
 
 
 export const metadata: Metadata = {
   title: "Lookiy - Discover and Join Networks Instantly",
   description: "Search for networks in real-time and connect with nodes around the world.",
   icons: {
-    icon: '/logo.svg',
+    icon: '/logomin.svg',
   },
 };
 
@@ -30,11 +36,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${nunitoSans.variable} antialiased`}
       >
-        <div className="overflow-scroll-container">
-          {children}
-        </div>
+        <LoadingProvider>
+          <div className="overflow-scroll-container">
+            {children}
+          </div>
+        </LoadingProvider>
       </body>
     </html>
   );
