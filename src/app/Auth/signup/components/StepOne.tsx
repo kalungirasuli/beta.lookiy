@@ -234,3 +234,5 @@ export default function StepOne({ formData, updateFormData, nextStep }: StepOneP
       </div>
     </motion.div>
   );
+}
+
