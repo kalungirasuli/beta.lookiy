@@ -5,15 +5,18 @@ import { motion } from 'framer-motion';
 import InterestsModal from './InterestsModal';
 import BioInput from './BioInput';
 
+type StepThreeFormData = {
+  bio: string;
+  interests: string[];
+};
+
 interface StepThreeProps {
-  formData: {
-    bio: string;
-    interests: string[];
-  };
-  updateFormData: (data: Partial<typeof formData>) => void;
+  formData: StepThreeFormData;
+  updateFormData: (data: Partial<StepThreeFormData>) => void;
   prevStep: () => void;
   handleSubmit: (e: React.FormEvent) => void;
 }
+
 
 export default function StepThree({ formData, updateFormData, prevStep, handleSubmit }: StepThreeProps) {
   const [isInterestsModalOpen, setIsInterestsModalOpen] = useState(false);
