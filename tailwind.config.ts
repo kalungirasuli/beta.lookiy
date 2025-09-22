@@ -7,6 +7,13 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    screens: {
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      'xxl': '1536px',
+    },
     extend: {
       fontFamily: {
         'nunito': ['var(--font-nunito)', 'sans-serif'],
@@ -25,6 +32,7 @@ const config: Config = {
         'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
         'card': '0 8px 32px rgba(0, 0, 0, 0.08)',
         'input': '0 8px 32px rgba(255, 107, 0, 0.1), 0 0 0 1px rgba(255, 107, 0, 0.1)',
+        'navbar': '4px 4px 0px 0px rgba(0, 0, 0, 0.15)',
       },
       backdropBlur: {
         'glass': '8px',
