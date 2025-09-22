@@ -3,13 +3,15 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
+type StepTwoFormData = {
+  gender: string;
+  age: string;
+  location: string;
+};
+
 interface StepTwoProps {
-  formData: {
-    gender: string;
-    age: string;
-    location: string;
-  };
-  updateFormData: (data: Partial<typeof formData>) => void;
+  formData: StepTwoFormData;
+  updateFormData: (data: Partial<StepTwoFormData>) => void;
   nextStep: () => void;
   prevStep: () => void;
 }

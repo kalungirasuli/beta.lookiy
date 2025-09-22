@@ -3,16 +3,19 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
+type FormDataShape = {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+};
+
 interface StepOneProps {
-  formData: {
-    name: string;
-    email: string;
-    password: string;
-    passwordConfirm: string;
-  };
-  updateFormData: (data: Partial<typeof formData>) => void;
+  formData: FormDataShape;
+  updateFormData: (data: Partial<FormDataShape>) => void;
   nextStep: () => void;
 }
+
 
 export default function StepOne({ formData, updateFormData, nextStep }: StepOneProps) {
   const [errors, setErrors] = useState({
