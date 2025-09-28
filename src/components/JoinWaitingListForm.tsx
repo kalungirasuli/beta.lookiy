@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
-import Image from 'next/image';
 
 export default function JoinWaitingListForm() {
   // Form state
@@ -180,8 +179,8 @@ export default function JoinWaitingListForm() {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">You&apos;re on the list!</h3>
-              <p className="text-gray-600 mb-6">Thanks for joining our waitlist. We&apos;ll notify you when Lookiy launches.</p>
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">You're on the list!</h3>
+              <p className="text-gray-600 mb-6">Thanks for joining our waitlist. We'll notify you when Lookiy launches.</p>
               <button
                 onClick={() => setSubmitted(false)}
                 className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-purple-600 bg-purple-50 hover:bg-purple-100"
@@ -199,12 +198,10 @@ export default function JoinWaitingListForm() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Image 
+            <img 
               src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (3).svg" 
               alt="Decorative element" 
               className="w-full h-full object-contain"
-              width={200}
-              height={200}
             />
           </motion.div>
           
@@ -215,12 +212,10 @@ export default function JoinWaitingListForm() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Image 
+            <img 
               src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (4).svg" 
               alt="Decorative element" 
               className="w-full h-full object-contain"
-              width={200}
-              height={200}
             />
           </motion.div>
         </div>

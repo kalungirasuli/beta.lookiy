@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
-import Image from 'next/image';
 
 export default function SupportForm() {
   // Form state
@@ -237,12 +236,10 @@ export default function SupportForm() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Image 
+            <img 
               src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (3).svg" 
               alt="Decorative element" 
               className="w-full h-full object-contain"
-              width={200}
-              height={200}
             />
           </motion.div>
           
@@ -253,12 +250,10 @@ export default function SupportForm() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Image 
+            <img 
               src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (4).svg" 
               alt="Decorative element" 
               className="w-full h-full object-contain"
-              width={200}
-              height={200}
             />
           </motion.div>
         </div>

@@ -69,7 +69,7 @@ export default function NetworkSearch() {
   const [networks, setNetworks] = useState<Network[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
+  const searchTimeout = useRef<any>(null);
 
   // Keep track of previous search results for smooth transitions
   const prevNetworksRef = useRef<Network[]>([]);
@@ -153,7 +153,7 @@ export default function NetworkSearch() {
         clearTimeout(searchTimeout.current);
       }
     };
-  }, [query]);
+  }, [query, networks.length]);
 
   return (
     <motion.div 
@@ -261,7 +261,7 @@ export default function NetworkSearch() {
                       </svg>
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">Create &quot;{query}&quot;</h3>
+                      <h3 className="font-semibold text-gray-900">Create "{query}"</h3>
                       <p className="text-sm text-gray-500">Set up a new network with this name</p>
                     </div>
                     <div className="text-accent">
