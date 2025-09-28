@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Nunito_Sans } from "next/font/google";
 import "./globals.css";
-import LoadingProvider from "@/components/LoadingProvider";
+// import LoadingProvider from "@/components/LoadingProvider";
 import AppWrapper from "@/components/AppWrapper";
 import { UserProvider } from "@/contexts/UserContext";
 
@@ -38,7 +38,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${nunitoSans.variable} antialiased`}
       >
-        <LoadingProvider>
+        {/* <LoadingProvider> */}
           <UserProvider>
             <AppWrapper>
               <div className="overflow-scroll-container">
@@ -46,7 +46,7 @@ export default function RootLayout({
               </div>
             </AppWrapper>
           </UserProvider>
-        </LoadingProvider>
+        {/* </LoadingProvider> */}
       </body>
     </html>
   );
