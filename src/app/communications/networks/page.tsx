@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 interface Post{
     id: string;
@@ -18,6 +21,7 @@ interface Post{
 
 export default function NetworkPostRoom() {
     // Sample post data
+    const [activeReactions, setActiveReactions] = useState<Record<string, Set<string>>>({})
     const posts: Post[] = [
         {
             id: "1",
@@ -52,16 +56,16 @@ export default function NetworkPostRoom() {
     ];
 
     return (
-        <div className="w-full max-w-4xl mx-auto p-6 space-y-6">
+        <div className="w-full max-w-4xl mx-auto p-6 space-y-4">
             {posts.map((post) => (
-                <div key={post.id} className="flex flex-col relative">
+                <div key={post.id} className="flex flex-col relative mb-15">
                     {/* Main Content Card */}
-                    <div className="bg-white rounded-xl border-2 border-gray-600 shadow-[7px_7px_0px_0px_rgba(0,0,0,0.7)] p-6 pb-14 relative">
+                    <div className="bg-white rounded-xl border-2 border-gray-600 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.7)] p-6 pb-14 relative">
                         {/* Role Badge */}
-                        <div className="absolute top-4 right-4">
-                            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                        <div className="absolute top-2 right-2 ">
+                            <span className={`px-3 py-1 text-[7px] font-semibold rounded-md ${
                                 post.role === 'admin' 
-                                    ? 'bg-purple-100 text-purple-800 border-2 border-purple-800' 
+                                    ? 'bg-purple-100 text-purple-800 border-1 border-purple-800 shadow-[3px_3px_0px_0px]' 
                                     : 'bg-blue-100 text-blue-800 border-2 border-blue-800'
                             }`}>
                                 {post.role}
@@ -99,36 +103,104 @@ export default function NetworkPostRoom() {
                     </div>
 
                     {/* Reaction Container - Absolute positioned at the bottom */}
-                    <div className="absolute inset-x-0 -bottom-1 bg-white border-t-2 border-gray-600">
-                        <div className="flex items-center justify-end gap-1 px-4 py-2">
-                            <button className="flex items-center gap-1 px-2 py-1 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all">
+                    <div className="absolute left-4 -bottom-[10%] bg-white border-2 border-gray-600 rounded-2xl shadow-[2px_2px_0px_0px_rgba(0,0,0,0.7)]">
+                        <div className="flex items-center gap-1 px-4 py-2" style={{ width: 'max-content' }}>
+                            <div
+                                onClick={() => {
+                                    setActiveReactions(prev => {
+                                        const newSet = new Set(prev[post.id] || [])
+                                        if (newSet.has('like')) {
+                                            newSet.delete('like')
+                                        } else {
+                                            newSet.add('like')
+                                        }
+                                        return { ...prev, [post.id]: newSet }
+                                    })
+                                }}
+                                className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+                                    activeReactions[post.id]?.has('like')
+                                        ? 'bg-red-50 text-red-600 border border-red-600'
+                                        : 'bg-red-100 text-red-600'
+                                }`}
+                            >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                                 </svg>
                                 <span className="text-xs">{post.like}</span>
-                            </button>
+                            </div>
 
-                            <button className="flex items-center gap-1 px-2 py-1 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all">
+                            <div
+                                onClick={() => {
+                                    setActiveReactions(prev => {
+                                        const newSet = new Set(prev[post.id] || [])
+                                        if (newSet.has('comment')) {
+                                            newSet.delete('comment')
+                                        } else {
+                                            newSet.add('comment')
+                                        }
+                                        return { ...prev, [post.id]: newSet }
+                                    })
+                                }}
+                                className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+                                    activeReactions[post.id]?.has('comment')
+                                        ? 'bg-blue-50 text-blue-600 border border-blue-600'
+                                        : 'bg-blue-100 text-blue-600'
+                                }`}
+                            >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                                 </svg>
                                 <span className="text-xs">{post.comment}</span>
-                            </button>
+                            </div>
 
-                            <button className="flex items-center gap-1 px-2 py-1 rounded-lg text-gray-500 hover:bg-green-50 hover:text-green-600 transition-all">
+                            <div
+                                onClick={() => {
+                                    setActiveReactions(prev => {
+                                        const newSet = new Set(prev[post.id] || [])
+                                        if (newSet.has('share')) {
+                                            newSet.delete('share')
+                                        } else {
+                                            newSet.add('share')
+                                        }
+                                        return { ...prev, [post.id]: newSet }
+                                    })
+                                }}
+                                className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+                                    activeReactions[post.id]?.has('share')
+                                        ? 'bg-green-50 text-green-600 border border-green-600'
+                                        : 'bg-green-100 text-green-600'
+                                }`}
+                            >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
                                 </svg>
                                 <span className="text-xs">{post.shares}</span>
-                            </button>
+                            </div>
 
-                            <button className="flex items-center gap-1 px-2 py-1 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-all">
+                            <div
+                                onClick={() => {
+                                    setActiveReactions(prev => {
+                                        const newSet = new Set(prev[post.id] || [])
+                                        if (newSet.has('view')) {
+                                            newSet.delete('view')
+                                        } else {
+                                            newSet.add('view')
+                                        }
+                                        return { ...prev, [post.id]: newSet }
+                                    })
+                                }}
+                                className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+                                    activeReactions[post.id]?.has('view')
+                                        ? 'bg-gray-100 text-gray-900 border border-gray-900'
+                                        : 'bg-gray-200 text-gray-900'
+                                }`}
+                            >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                     <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                                 </svg>
                                 <span className="text-xs">{post.views}</span>
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>
