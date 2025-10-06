@@ -1,6 +1,7 @@
 
 import Sidebar from "@/components/Sidebar";
 import Image from "next/image";
+import PostImage from "@/components/postimagecontainer";
 interface Profile {
   name: string;
   creator: string;

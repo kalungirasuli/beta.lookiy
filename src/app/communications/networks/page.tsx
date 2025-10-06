@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-
+import PostImage from "@/components/postimagecontainer";
 // Badge animations
 const badgeAnimations = `
 @keyframes burst {
@@ -72,6 +72,7 @@ interface Post{
     lastupdated: string;
     comment: number;
     like: number;
+    images: string[];
     shares: number;
     views: number;
     name: string;
@@ -191,6 +192,7 @@ export default function NetworkPostRoom() {
             role: "admin",
             profileimage: "/logo.svg",
             content: ["AI is revolutionizing healthcare in unprecedented ways. From diagnosis to treatment planning, the integration of artificial intelligence is improving patient outcomes and streamlining medical processes."],
+            images: ["/WFH_svg 3/wfh_1.svg"],
             createdAt: "2025-09-28T10:00:00Z",
             lastupdated: "2025-09-28T10:00:00Z",
             comment: 45,
@@ -205,6 +207,7 @@ export default function NetworkPostRoom() {
             creator: "Alex Chen",
             role: "modulator",
             profileimage: "/logo.svg",
+            images: ["/WFH_svg 3/wfh_1.svg","/WFH_svg 3/wfh_6.svg","/WFH_svg 3/wfh_7.svg",],
             content: ["Implementing sustainable practices in technology development is no longer optional. Here's how companies can reduce their carbon footprint while maintaining innovation."],
             createdAt: "2025-09-28T09:30:00Z",
             lastupdated: "2025-09-28T09:30:00Z",
@@ -219,9 +222,9 @@ export default function NetworkPostRoom() {
     return (
         <div className="w-full max-w-4xl mx-auto p-6 space-y-4">
             {posts.map((post) => (
-                <div key={post.id} className="flex flex-col relative mb-15">
+                <div key={post.id} className="flex flex-col relative mb-15 ">
                     {/* Main Content Card */}
-                    <div className="bg-white rounded-xl border-1 border-gray-300  p-6 pb-5 relative">
+                    <div className="bg-white rounded-xl border-1 border-gray-300 p-6 pb-8 relative overflow-visible shadow-gray-200 shadow-md">
                         {/* Menu Button */}
                         <div 
                             className="absolute top-4 right-4" 
@@ -621,6 +624,13 @@ export default function NetworkPostRoom() {
                                 <p key={index} className="mb-2">{paragraph}</p>
                             ))}
                         </div>
+                        {/* Post Image */}
+                        {post.images && (
+                            <PostImage
+                                data={post.images}
+                                className="mt-2 mb-4 "
+                            />
+                        )}
 
                         {/* Post Metadata */}
                         <div className="text-xs text-gray-500 flex items-center justify-end space-x-2">
@@ -629,7 +639,8 @@ export default function NetworkPostRoom() {
                     </div>
 
                     {/* Reaction and Bookmark Container - Absolute positioned at the bottom */}
-                    <div className="absolute -bottom-[calc(10%-12px)] right-4 flex gap-2">
+                  <div className="reactions">
+                      <div className="absolute -bottom-4 z-10 right-4 flex gap-2">
                         {/* Report Icon - Only visible after selecting from menu */}
                         {(reportIconVisible.has(post.id) || reportedPosts.has(post.id)) && (
                             <div 
@@ -663,8 +674,8 @@ export default function NetworkPostRoom() {
                         )}
                     </div>
 
-                    {/* Reaction Container - Absolute positioned at the bottom */}
-                    <div className="absolute left-4 -bottom-[10%] ">
+                    {/* Reaction Container - Fixed to bottom border */}
+                    <div className="absolute left-4 -bottom-4 z-10">
                         <div className="flex items-center gap-1 px-4 py-2 w-max">
                             <div
                                 onClick={() => {
@@ -766,6 +777,7 @@ export default function NetworkPostRoom() {
 
                         </div>
                     </div>
+                  </div>
                 </div>
             ))}
         </div>
