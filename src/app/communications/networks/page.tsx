@@ -207,7 +207,7 @@ export default function NetworkPostRoom() {
             creator: "Alex Chen",
             role: "modulator",
             profileimage: "/logo.svg",
-            images: ["/WFH_svg 3/wfh_1.svg","/WFH_svg 3/wfh_6.svg","/WFH_svg 3/wfh_7.svg",],
+            images: ["/WFH_svg 3/wfh_1.svg","/WFH_svg 3/wfh_6.svg","/WFH_svg 3/wfh_7.svg","/WFH_svg 3/wfh_8.svg","/WFH_svg 3/wfh_9.svg"],
             content: ["Implementing sustainable practices in technology development is no longer optional. Here's how companies can reduce their carbon footprint while maintaining innovation."],
             createdAt: "2025-09-28T09:30:00Z",
             lastupdated: "2025-09-28T09:30:00Z",
@@ -224,7 +224,7 @@ export default function NetworkPostRoom() {
             {posts.map((post) => (
                 <div key={post.id} className="flex flex-col relative mb-15 ">
                     {/* Main Content Card */}
-                    <div className="bg-white rounded-xl border-1 border-gray-300 p-6 pb-8 relative overflow-visible shadow-gray-200 shadow-md">
+                    <div className="bg-white rounded-xl border-2 border-black p-6 pb-8 relative overflow-visible shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150">
                         {/* Menu Button */}
                         <div 
                             className="absolute top-4 right-4" 
@@ -234,10 +234,10 @@ export default function NetworkPostRoom() {
                         >
                             <button 
                                 onClick={() => setActiveMenu(activeMenu === post.id ? null : post.id)}
-                                className="p-1 hover:bg-gray-100 rounded-lg transition-all duration-300"
+                                className="p-1 hover:bg-gray-100 rounded-lg transition-all border-black border-2 duration-300 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[1px] hover:translate-y-[1px]"
                                 aria-label="Post options menu"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 font-bold" viewBox="0 0 20 20" fill="currentColor" strokeWidth="1" stroke="currentColor">
                                     <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                                 </svg>
                             </button>
@@ -245,20 +245,20 @@ export default function NetworkPostRoom() {
                             {/* Dropdown Menu */}
                             {activeMenu === post.id && (
                                 <div 
-                                    className={`absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-[7px_7px_0px_0px_rgba(0,0,0,0.5)] border border-gray-200 z-50 transform transition-all duration-200 ease-out origin-top-right ${
+                                    className={`absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] border-2 border-black z-50 transform transition-all duration-200 ease-out origin-top-right ${
                                         activeMenu === post.id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
                                     }`}
                                 >
                                     <div className="py-1">
                                         <button 
                                             onClick={() => {/* Add edit handler */}} 
-                                            className="w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 text-left transition-colors duration-150"
+                                            className="w-full px-4 py-2 text-sm text-gray-900 hover:bg-orange-50 text-left transition-colors duration-150 border-b border-gray-200 font-medium"
                                         >
                                             Edit Post
                                         </button>
                                         <button 
                                             onClick={() => {/* Add delete handler */}} 
-                                            className="w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 text-left transition-colors duration-150"
+                                            className="w-full px-4 py-2 text-sm text-gray-900 hover:bg-orange-50 text-left transition-colors duration-150 border-b border-gray-200 font-medium"
                                         >
                                             Delete Post
                                         </button>
@@ -272,7 +272,7 @@ export default function NetworkPostRoom() {
                                                         return next;
                                                     });
                                                 }}
-                                                className="w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 text-left"
+                                                className="w-full px-4 py-2 text-sm text-gray-900 hover:bg-orange-50 text-left font-medium"
                                             >
                                                 Unreport Post
                                             </button>
@@ -296,7 +296,7 @@ export default function NetworkPostRoom() {
                                                                     <label 
                                                                         key={violation} 
                                                                         htmlFor={`${post.id}-${violation}`}
-                                                                        className="flex items-center hover:bg-gray-50 px-2 py-1 rounded cursor-pointer group"
+                                                                        className="flex items-center hover:bg-orange-50 px-2 py-1 rounded cursor-pointer group border border-gray-200"
                                                                     >
                                                                         <input
                                                                             type="checkbox"
@@ -329,7 +329,7 @@ export default function NetworkPostRoom() {
                                                                                 </svg>
                                                                             )}
                                                                         </div>
-                                                                        <span className="text-sm text-gray-600 select-none">
+                                                                        <span className="text-sm text-gray-900 select-none font-medium">
                                                                             {labels[violation as keyof typeof labels]}
                                                                         </span>
                                                                     </label>
@@ -346,7 +346,7 @@ export default function NetworkPostRoom() {
                                                                         return next;
                                                                     });
                                                                 }}
-                                                                className="w-1/2 px-4 py-2 text-xs text-gray-600 hover:bg-gray-50 text-center font-medium rounded"
+                                                                className="w-1/2 px-4 py-2 text-xs text-gray-900 hover:bg-orange-50 text-center font-medium rounded border border-gray-200"
                                                             >
                                                                 Cancel
                                                             </button>
@@ -357,8 +357,8 @@ export default function NetworkPostRoom() {
                                                                         setActiveReportMenu(null);
                                                                     }}
                                                                     className="w-1/2 px-2 py-2 text-xs text-white bg-red-500 
-                                                                    shadow-[3px_3px_0px_0px_rgba(220,38,38,0.5)]
-                                                                    hover:bg-red-600 text-center font-medium rounded"
+                                                                    shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] border border-black
+                                                                    hover:bg-red-600 hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[1px] hover:translate-y-[1px] text-center font-medium rounded"
                                                                 >
                                                                     Report
                                                                 </button>
@@ -375,7 +375,7 @@ export default function NetworkPostRoom() {
                                                                 return next;
                                                             });
                                                         }}
-                                                        className="w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 text-left transition-colors duration-150"
+                                                        className="w-full px-4 py-2 text-sm text-gray-900 hover:bg-orange-50 text-left transition-colors duration-150 font-medium"
                                                     >
                                                         Report Post
                                                     </button>
@@ -384,7 +384,7 @@ export default function NetworkPostRoom() {
                                         )}
                                         <button 
                                             onClick={() => toggleBookmark(post.id)} 
-                                            className="w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 text-left transition-colors duration-150"
+                                            className="w-full px-4 py-2 text-sm text-gray-900 hover:bg-orange-50 text-left transition-colors duration-150 font-medium "
                                         >
                                             {bookmarkedPosts.has(post.id) ? 'Remove Bookmark' : 'Bookmark Post'}
                                         </button>
@@ -394,8 +394,8 @@ export default function NetworkPostRoom() {
                         </div>
 
                         {/* Creator Info */}
-                        <div className="flex items-center space-x-4 mb-4 border-b border-b-gray-300 pb-5">
-                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-orange-200 flex-shrink-0 items-center justify-center flex">
+                        <div className="flex items-center space-x-4 mb-4 border-b-2 border-b-gray-400 pb-5">
+                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-black flex-shrink-0 items-center justify-center flex shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)]">
                                 <Image
                                     src={post.profileimage}
                                     alt={post.creator}
@@ -654,7 +654,7 @@ export default function NetworkPostRoom() {
                                     ? 'Click to unreport this post' 
                                     : `Reported for: ${Array.from(ruleViolations[post.id] || []).join(', ') || 'rule violations'}`}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 font-bold" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                 </svg>
                             </div>
@@ -664,10 +664,10 @@ export default function NetworkPostRoom() {
                         {bookmarkedPosts.has(post.id) && (
                             <div 
                                 onClick={() => toggleBookmark(post.id)}
-                                className="flex items-center justify-center w-7 h-7 rounded-full transition-all cursor-pointer bg-white border-2 border-gray-300 hover:bg-gray-50"
+                                className="flex items-center justify-center w-7 h-7 rounded-full transition-all cursor-pointer bg-white border-2 border-black hover:bg-gray-50"
                                 title="Remove Bookmark"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-orange-500 font-bold" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                                 </svg>
                             </div>
@@ -691,14 +691,14 @@ export default function NetworkPostRoom() {
                                 }}
                                 className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
                                     activeReactions[post.id]?.has('like')
-                                        ? 'bg-white text-red-600 border border-red-600 shadow-[3px_3px_0px_0px_rgba(220,0,0,0.8)]'
-                                        : 'bg-white text-red-600 border-1 border-gray-600  shadow-[1px_1px_0px_0px_rgba(220,0,0,0.8)'
+                                        ? 'bg-white text-red-600 border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)]'
+                                        : 'bg-white text-red-600 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[1px] hover:translate-y-[1px]'
                                 }`}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 font-bold" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                                 </svg>
-                                <span className="text-xs">{post.like}</span>
+                                <span className="text-sm font-bold">{post.like}</span>
                             </div>
 
                             <div
@@ -715,14 +715,14 @@ export default function NetworkPostRoom() {
                                 }}
                                 className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
                                     activeReactions[post.id]?.has('comment')
-                                        ? 'bg-white text-blue-600 border border-blue-600 shadow-[3px_3px_0px_0px_rgba(0,0,255,0.8)]'
-                                        : 'bg-white text-blue-600 border border-gray-600  '
+                                        ? 'bg-white text-blue-600 border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)]'
+                                        : 'bg-white text-blue-600 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[1px] hover:translate-y-[1px]'
                                 }`}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 font-bold" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                                 </svg>
-                                <span className="text-xs">{post.comment}</span>
+                                <span className="text-sm font-bold">{post.comment}</span>
                             </div>
 
                             <div
@@ -739,14 +739,14 @@ export default function NetworkPostRoom() {
                                 }}
                                 className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
                                     activeReactions[post.id]?.has('share')
-                                        ? 'bg-white text-green-600 border border-green-600 shadow-[3px_3px_0px_0px_rgba(0,100,0,0.8)]'
-                                        : 'bg-white text-green-600 border border-gray-600   '
+                                        ? 'bg-white text-green-600 border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)]'
+                                        : 'bg-white text-green-600 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[1px] hover:translate-y-[1px]'
                                 }`}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 font-bold" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
                                 </svg>
-                                <span className="text-xs">{post.shares}</span>
+                                <span className="text-sm font-bold">{post.shares}</span>
                             </div>
 
                             <div
@@ -763,15 +763,15 @@ export default function NetworkPostRoom() {
                                 }}
                                 className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
                                     activeReactions[post.id]?.has('view')
-                                        ? 'bg-white text-gray-900 border border-gray-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.6)]'
-                                        : 'bg-white text-gray-900 border border-gray-600 '
+                                        ? 'bg-white text-gray-900 border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)]'
+                                        : 'bg-white text-gray-900 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[1px] hover:translate-y-[1px]'
                                 }`}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 font-bold" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                     <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                                 </svg>
-                                <span className="text-xs">{post.views}</span>
+                                <span className="text-sm font-bold">{post.views}</span>
                             </div>
 
 
