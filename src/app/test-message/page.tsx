@@ -18,7 +18,11 @@ export default function TestMessagePage() {
       author: { name: 'You' },
       timestamp: '1 min ago',
       isOwn: true,
-      reactions: { like: 5, comment: 1, share: 0, view: 12 }
+      reactions: { like: 5, comment: 1, share: 0, view: 12 },
+      reference: {
+        author: { name: 'Alice Johnson' },
+        content: 'Hey everyone! Just wanted to share some exciting news about our upcoming project launch...'
+      }
     },
     {
       id: '3',
@@ -27,6 +31,30 @@ export default function TestMessagePage() {
       timestamp: '30 sec ago',
       isOwn: false,
       reactions: { like: 8, comment: 2, share: 1, view: 23 }
+    },
+    {
+      id: '4',
+      text: 'Next week works perfectly for me! Tuesday afternoon would be ideal if that fits everyone\'s schedule.',
+      author: { name: 'Carol Davis' },
+      timestamp: '15 sec ago',
+      isOwn: false,
+      reactions: { like: 3, comment: 0, share: 0, view: 8 },
+      reference: {
+        author: { name: 'Bob Smith' },
+        content: 'We should definitely schedule a demo session soon. What do you think about next week?'
+      }
+    },
+    {
+      id: '5',
+      text: 'Perfect! I\'ll send out calendar invites for Tuesday at 2 PM. Looking forward to showing everyone what we\'ve accomplished!',
+      author: { name: 'You' },
+      timestamp: 'just now',
+      isOwn: true,
+      reactions: { like: 2, comment: 0, share: 0, view: 4 },
+      reference: {
+        author: { name: 'Carol Davis' },
+        content: 'Next week works perfectly for me! Tuesday afternoon would be ideal...'
+      }
     }
   ];
 
@@ -39,7 +67,7 @@ export default function TestMessagePage() {
         </div>
 
         <div className="bg-white rounded-xl border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Sample Conversation</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Sample Conversation with Threading</h2>
           
           <div className="space-y-4">
             {sampleMessages.map((message) => (
@@ -51,6 +79,7 @@ export default function TestMessagePage() {
                 timestamp={message.timestamp}
                 isOwn={message.isOwn}
                 reactions={message.reactions}
+                reference={message.reference}
               />
             ))}
           </div>
@@ -60,11 +89,13 @@ export default function TestMessagePage() {
             <ul className="text-sm text-gray-600 space-y-1">
               <li>• Text message display with proper formatting</li>
               <li>• Author information with avatar placeholder</li>
+              <li>• <strong>Reference/Threading system</strong> - Reply to specific messages with quoted content</li>
               <li>• Reaction buttons (like, comment, share, view) with toggle functionality</li>
               <li>• Menu dropdown with bookmark and report options</li>
               <li>• Different styling for own vs. other messages</li>
               <li>• Consistent homecoming design with 4px shadows</li>
               <li>• Hover effects and smooth transitions</li>
+              <li>• Faded gray background for referenced messages with rounded corners</li>
             </ul>
           </div>
         </div>

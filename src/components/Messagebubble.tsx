@@ -17,6 +17,13 @@ interface MessageBubbleProps {
     share: number;
     view: number;
   };
+  reference?: {
+    author: {
+      name: string;
+      avatar?: string;
+    };
+    content: string;
+  };
 }
 
 export default function MessageBubble({ 
@@ -25,7 +32,8 @@ export default function MessageBubble({
   author, 
   timestamp, 
   isOwn = false,
-  reactions = { like: 0, comment: 0, share: 0, view: 0 }
+  reactions = { like: 0, comment: 0, share: 0, view: 0 },
+  reference
 }: MessageBubbleProps) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [activeReportMenu, setActiveReportMenu] = useState<string | null>(null);
@@ -62,29 +70,90 @@ export default function MessageBubble({
   return (
     <>
       {/* Main container with message and menu button */}
-      <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-1`}>
-        <div className="flex gap-2" style={{ marginBottom: '5px' }}>
-          {/* Message Bubble */}
-          <div className={`max-w-xs lg:max-w-md xl:max-w-lg bg-white rounded-xl border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 ${isOwn ? 'bg-orange-50' : 'bg-white'}`}>
-            
-            {/* Author Info */}
-            {!isOwn && (
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-full bg-gray-300 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] flex items-center justify-center">
-                  <span className="text-xs font-bold text-gray-600">
-                    {author.name.charAt(0).toUpperCase()}
-                  </span>
+      <div className={`flex   ${isOwn ? 'justify-end' : 'justify-start'} mb-1`}>
+        <div className="flex relative gap-2" style={{ marginBottom: '5px' }}>
+          {/* Message Bubble Container with Reactions */}
+          <div className="relative mb-3">
+            {/* Message Bubble */}
+            <div className={`max-w-xs lg:max-w-md xl:max-w-lg bg-white rounded-xl border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 ${isOwn ? 'bg-orange-50' : 'bg-white'}`}>
+              
+              {/* Reference/Reply Section */}
+              {reference && (
+                <div className="bg-orange-50 border-2 border-black rounded-xl p-3 mb-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.6)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.6)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all duration-150">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-4 h-4 rounded-full bg-orange-200 border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.6)] flex items-center justify-center">
+                      <span className="text-[10px] font-bold text-black">
+                        {reference.author.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="text-xs font-bold text-black">{reference.author.name}</span>
+                  </div>
+                  <div className="text-xs text-black leading-relaxed font-medium">
+                    {reference.content}
+                  </div>
                 </div>
-                <span className="text-sm font-medium text-gray-700">{author.name}</span>
-                {timestamp && (
-                  <span className="text-xs text-gray-500">{timestamp}</span>
-                )}
-              </div>
-            )}
+              )}
 
-            {/* Message Text */}
-            <div className="text-gray-800 text-sm leading-relaxed">
-              {text}
+              {/* Author Info */}
+              {!isOwn && (
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-6 h-6 rounded-full bg-gray-300 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] flex items-center justify-center">
+                    <span className="text-xs font-bold text-gray-600">
+                      {author.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">{author.name}</span>
+                  {timestamp && (
+                    <span className="text-xs text-gray-500">{timestamp}</span>
+                  )}
+                </div>
+              )}
+
+              {/* Message Text */}
+              <div className="text-gray-800 text-sm leading-relaxed">
+                {text}
+              </div>
+            </div>
+
+            {/* Reaction Icons - Outside bubble, attached to bottom border */}
+            <div className="flex justify-start mt-2  ml-4">
+              <div className="flex gap-1">
+                {/* Like Button */}
+                <button
+                  onClick={() => toggleReaction('like')}
+                  className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+                    activeReactions[id]?.has('like')
+                      ? 'bg-white text-red-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,127,0.8)]'
+                      : 'bg-white text-red-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,127,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(220,38,127,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
+                  } duration-150`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-xs font-bold">{reactions.like}</span>
+                </button>
+
+                {/* Comment Button */}
+                <button
+                  onClick={() => toggleReaction('comment')}
+                  className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer relative ${
+                    activeReactions[id]?.has('comment')
+                      ? 'bg-white text-blue-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(59,130,246,0.8)]'
+                      : 'bg-white text-blue-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(59,130,246,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(59,130,246,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
+                  } duration-150`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                  </svg>
+                  {/* <span className="text-xs font-bold">{reactions.comment}</span> */}
+                  {reactions.comment > 0 && (
+                    <span className="badge text-white text-[10px] bg-red-500 rounded-full font-bold absolute top-[-7px] right-[-7px] w-4 h-4 flex items-center justify-center border-2 border-white">
+                      {reactions.comment}
+                    </span>
+                  )}
+                </button>
+               
+              </div>
             </div>
           </div>
 
@@ -214,78 +283,10 @@ export default function MessageBubble({
               </div>
             )}
           </div>
+
+
         </div>
-      </div>
-
-      {/* Reaction Buttons - Separate row like in audio component */}
-      <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
-        <div className="flex gap-1">
-          {/* Like Button */}
-          <button
-            onClick={() => toggleReaction('like')}
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
-              activeReactions[id]?.has('like')
-                ? 'bg-white text-red-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,127,0.8)]'
-                : 'bg-white text-red-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,127,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(220,38,127,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
-            } duration-150`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-            </svg>
-            <span className="text-xs font-bold">{reactions.like}</span>
-          </button>
-
-          {/* Comment Button */}
-          <button
-            onClick={() => toggleReaction('comment')}
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer relative ${
-              activeReactions[id]?.has('comment')
-                ? 'bg-white text-blue-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(59,130,246,0.8)]'
-                : 'bg-white text-blue-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(59,130,246,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(59,130,246,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
-            } duration-150`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-            </svg>
-            <span className="text-xs font-bold">{reactions.comment}</span>
-            {reactions.comment > 0 && (
-              <span className="badge text-white text-[10px] bg-red-500 rounded-full font-bold absolute top-[-7px] right-[-7px] w-4 h-4 flex items-center justify-center border-2 border-white">
-                {reactions.comment}
-              </span>
-            )}
-          </button>
-
-          {/* Share Button */}
-          <button
-            onClick={() => toggleReaction('share')}
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
-              activeReactions[id]?.has('share')
-                ? 'bg-white text-green-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(34,197,94,0.8)]'
-                : 'bg-white text-green-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(34,197,94,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(34,197,94,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
-            } duration-150`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-            </svg>
-            <span className="text-xs font-bold">{reactions.share}</span>
-          </button>
-
-          {/* View Button */}
-          <button
-            onClick={() => toggleReaction('view')}
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
-              activeReactions[id]?.has('view')
-                ? 'bg-white text-gray-900 border-2 border-black shadow-[4px_4px_0px_0px_rgba(107,114,128,0.8)]'
-                : 'bg-white text-gray-900 border-2 border-black shadow-[4px_4px_0px_0px_rgba(107,114,128,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(107,114,128,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
-            } duration-150`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-              <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-            </svg>
-            <span className="text-xs font-bold">{reactions.view}</span>
-          </button>
-        </div>
+       
       </div>
     </>
   );
