@@ -1,6 +1,8 @@
 'use client';
 
 import MessageBubble from '@/components/Messagebubble';
+import AudioRecord from '@/components/Audiorecord';
+import { audio } from 'framer-motion/client';
 
 export default function TestMessagePage() {
   const sampleMessages = [
@@ -21,7 +23,8 @@ export default function TestMessagePage() {
       reactions: { like: 5, comment: 1, share: 0, view: 12 },
       reference: {
         author: { name: 'Alice Johnson' },
-        content: 'Hey everyone! Just wanted to share some exciting news about our upcoming project launch...'
+        content: 'Hey everyone! Just wanted to share some exciting news about our upcoming project launch...',
+        images: ['https://picsum.photos/200/300?random=10']
       }
     },
     {
@@ -30,7 +33,15 @@ export default function TestMessagePage() {
       author: { name: 'Bob Smith' },
       timestamp: '30 sec ago',
       isOwn: false,
-      reactions: { like: 8, comment: 2, share: 1, view: 23 }
+      reactions: { like: 8, comment: 2, share: 1, view: 23 },
+      reference: {
+        author: { name: 'Alice Johnson' },
+        content: 'Here\'s a voice message explaining the project details',
+        audio: {
+          duration: '1:45',
+          url: '/audio/sample.mp3'
+        }
+      }
     },
     {
       id: '4',
@@ -41,8 +52,18 @@ export default function TestMessagePage() {
       reactions: { like: 3, comment: 0, share: 0, view: 8 },
       reference: {
         author: { name: 'Bob Smith' },
-        content: 'We should definitely schedule a demo session soon. What do you think about next week?'
-      }
+        content: '',
+        audio: {
+          duration: '0:32',
+          url: '/audio/response.mp3'
+        }
+      },
+      media: [
+        'https://picsum.photos/200/300?random=6',
+        { src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', type: 'video' as const, poster: 'https://picsum.photos/200/300?random=7' },
+        'https://picsum.photos/200/300?random=8'
+      ],
+      
     },
     {
       id: '5',
@@ -53,8 +74,24 @@ export default function TestMessagePage() {
       reactions: { like: 2, comment: 0, share: 0, view: 4 },
       reference: {
         author: { name: 'Carol Davis' },
-        content: 'Next week works perfectly for me! Tuesday afternoon would be ideal...'
-      }
+        content: 'Next week works perfectly for me! Tuesday afternoon would be ideal...',
+        images: ['https://picsum.photos/250/200?random=12']
+      },
+      media: [
+        { src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', type: 'video' as const, poster: 'https://picsum.photos/400/300?random=1' },
+      ],
+
+    },
+    {
+      id: '6',
+      text: 'Here\'s a quick demo video of the new features we\'ve been working on!',
+      author: { name: 'Alice Johnson' },
+      timestamp: 'just now',
+      isOwn: false,
+      reactions: { like: 15, comment: 4, share: 3, view: 67 },
+      media: [
+        { src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', type: 'video' as const, poster: 'https://picsum.photos/500/300?random=20', alt: 'Demo video of new features' }
+      ]
     }
   ];
 
@@ -71,6 +108,7 @@ export default function TestMessagePage() {
           
           <div className="space-y-4">
             {sampleMessages.map((message) => (
+              
               <MessageBubble
                 key={message.id}
                 id={message.id}
@@ -80,8 +118,10 @@ export default function TestMessagePage() {
                 isOwn={message.isOwn}
                 reactions={message.reactions}
                 reference={message.reference}
+                {...(message as any)}
               />
             ))}
+            <AudioRecord duration="2:30" createdAt="5m" />
           </div>
 
           <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">

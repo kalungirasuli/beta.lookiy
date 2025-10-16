@@ -1,6 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { FaCirclePlay } from 'react-icons/fa6';
+import ImageCarousel from './ImageCarousel';
+import SingleImage from './SingleImage';
+import SingleMedia from './SingleMedia';
+import MediaCarousel from './MediaCarousel';
+import MediaModal from './MediaModal';
 
 interface MessageBubbleProps {
   id: string;
@@ -23,7 +29,14 @@ interface MessageBubbleProps {
       avatar?: string;
     };
     content: string;
+    images?: string[];
+    audio?: {
+      duration?: string;
+      url?: string;
+    };
   };
+  images?: string[];
+  media?: (string | { src: string; type?: 'image' | 'video'; poster?: string; alt?: string })[];
 }
 
 export default function MessageBubble({ 
@@ -33,12 +46,17 @@ export default function MessageBubble({
   timestamp, 
   isOwn = false,
   reactions = { like: 0, comment: 0, share: 0, view: 0 },
-  reference
+  reference,
+  images,
+  media
 }: MessageBubbleProps) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [activeReportMenu, setActiveReportMenu] = useState<string | null>(null);
   const [reportIconVisible, setReportIconVisible] = useState<Set<string>>(new Set());
   const [activeReactions, setActiveReactions] = useState<Record<string, Set<string>>>({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMedia, setModalMedia] = useState<(string | { src: string; type?: 'image' | 'video'; poster?: string; alt?: string })[]>([]);
+  const [modalIndex, setModalIndex] = useState(0);
   
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -67,6 +85,24 @@ export default function MessageBubble({
     });
   };
 
+  const handleSingleMediaClick = () => {
+    if (media && media.length === 1) {
+      setModalMedia(media);
+      setModalIndex(0);
+      setIsModalOpen(true);
+    }
+  };
+  
+  const handleSingleImageClick = () => {
+    if (images && images.length === 1) {
+      // Convert images to the format expected by MediaModal
+      const formattedMedia = images.map(img => ({ src: img, type: 'image' as const }));
+      setModalMedia(formattedMedia);
+      setModalIndex(0);
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <>
       {/* Main container with message and menu button */}
@@ -75,7 +111,7 @@ export default function MessageBubble({
           {/* Message Bubble Container with Reactions */}
           <div className="relative mb-3">
             {/* Message Bubble */}
-            <div className={`max-w-xs lg:max-w-md xl:max-w-lg bg-white rounded-xl border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 ${isOwn ? 'bg-orange-50' : 'bg-white'}`}>
+            <div className={`max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg bg-white rounded-xl border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 ${isOwn ? 'bg-orange-50' : 'bg-white'}`}>
               
               {/* Reference/Reply Section */}
               {reference && (
@@ -88,9 +124,65 @@ export default function MessageBubble({
                     </div>
                     <span className="text-xs font-bold text-black">{reference.author.name}</span>
                   </div>
-                  <div className="text-xs text-black leading-relaxed font-medium">
-                    {reference.content}
-                  </div>
+                  
+                  {/* Content and Image Layout */}
+                  {reference.content ? (
+                    // When there's text content, show image on the right
+                    <div className="flex gap-2">
+                      <div className="flex-1 text-xs text-black leading-relaxed font-medium">
+                        {reference.content}
+                      </div>
+                      {reference.images && reference.images.length > 0 && (
+                        <div className="flex-shrink-0 w-12 h-12">
+                          <img 
+                            src={reference.images[0]} 
+                            alt="Referenced image"
+                            className="w-full h-full object-cover rounded-lg border border-black"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    // When there's no text content, show image or audio below profile
+                    <div className="mt-2">
+                      {reference.images && reference.images.length > 0 && (
+                        <img 
+                          src={reference.images[0]} 
+                          alt="Referenced image"
+                          className="w-full max-w-[120px] h-auto object-cover rounded-lg border border-black"
+                        />
+                      )}
+                      {reference.audio && (
+                        <div className="flex items-center space-x-2 mt-1">
+                          {/* Play icon */}
+                          <FaCirclePlay className="text-orange-500 text-lg flex-shrink-0 cursor-pointer hover:text-orange-600 transition-colors duration-200" />
+                          {/* Audio frequency bars */}
+                          <div className="flex items-center justify-between space-x-0.5 h-6 flex-1 max-w-[100px]">
+                            {Array.from({ length: 20 }, (_, index) => {
+                              const height = Math.random() * 100 + 10;
+                              return (
+                                <div
+                                  key={index}
+                                  className="w-0.5 rounded-full bg-gradient-to-t from-orange-300 to-orange-500 border border-black shadow-[0.5px_0.5px_0px_0px_rgba(0,0,0,0.2)]"
+                                  style={{
+                                    height: `${Math.max(height * 0.2, 4)}px`,
+                                    opacity: 0.8
+                                  }}
+                                />
+                              );
+                            })}
+                          </div>
+                          {reference.audio.duration && (
+                            <span className="text-[10px] font-bold text-black">
+                              {reference.audio.duration}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                 
                 </div>
               )}
 
@@ -113,6 +205,56 @@ export default function MessageBubble({
               <div className="text-gray-800 text-sm leading-relaxed">
                 {text}
               </div>
+
+              {/* Media Display */}
+              {media && media.length > 0 ? (
+                <div className="mt-3">
+                  {media.length === 1 ? (
+                    <SingleMedia 
+                      src={typeof media[0] === 'string' ? media[0] : media[0].src}
+                      type={typeof media[0] === 'string' ? undefined : media[0].type}
+                      poster={typeof media[0] === 'string' ? undefined : media[0].poster}
+                      alt={typeof media[0] === 'string' ? `Media from ${author.name}` : media[0].alt || `Media from ${author.name}`}
+                      className="w-full"
+                      onClick={handleSingleMediaClick}
+                    />
+                  ) : (
+                    <MediaCarousel 
+                      media={media}
+                      alt={`Media from ${author.name}`}
+                      className="w-full"
+                      onMediaClick={(index) => {
+                        setModalMedia(media);
+                        setModalIndex(index);
+                        setIsModalOpen(true);
+                      }}
+                    />
+                  )}
+                </div>
+              ) : images && images.length > 0 && (
+                <div className="mt-3">
+                  {images.length === 1 ? (
+                    <SingleImage 
+                      src={images[0]}
+                      alt={`Image from ${author.name}`}
+                      className="w-full"
+                      onClick={handleSingleImageClick}
+                    />
+                  ) : (
+                    <ImageCarousel 
+                      images={images}
+                      alt={`Images from ${author.name}`}
+                      className="w-full"
+                      onImageClick={(index) => {
+                        const formattedMedia = images.map(img => ({ src: img, type: 'image' as const }));
+                        setModalMedia(formattedMedia);
+                        setModalIndex(index);
+                        setIsModalOpen(true);
+                      }}
+                    />
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Reaction Icons - Outside bubble, attached to bottom border */}
@@ -161,10 +303,10 @@ export default function MessageBubble({
           <div className="relative" ref={menuRef}>
             <button 
               onClick={() => setActiveMenu(activeMenu === id ? null : id)}
-              className="flex-shrink-0 bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 p-2 text-gray-700 hover:text-gray-900"
+              className="flex-shrink-0 bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 p-1.5 text-gray-700 hover:text-gray-900"
               aria-label="Message options menu"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 font-bold" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
               </svg>
             </button>
@@ -288,6 +430,16 @@ export default function MessageBubble({
         </div>
        
       </div>
+
+      {/* Media Modal */}
+      {isModalOpen && (
+        <MediaModal
+          media={modalMedia}
+          initialIndex={modalIndex}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   );
 }
