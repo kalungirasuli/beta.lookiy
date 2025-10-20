@@ -63,6 +63,61 @@ export default function TestMessagePage() {
         { src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', type: 'video' as const, poster: 'https://picsum.photos/200/300?random=7' },
         'https://picsum.photos/200/300?random=8'
       ],
+      children:[
+         {
+      id: '1',
+      text: 'Next week works perfectly for me! Tuesday afternoon would be ideal if that fits everyone\'s schedule.',
+      author: { name: 'Carol Davis' },
+      timestamp: '15 sec',
+      isOwn: false,
+      reactions: { like: 3, comment: 0, share: 0, view: 8 },
+      media: [
+        'https://picsum.photos/200/300?random=6',
+        { src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', type: 'video' as const, poster: 'https://picsum.photos/200/300?random=7' },
+        'https://picsum.photos/200/300?random=8'
+      ],
+      child:true,
+      replies:[{
+        name:"Sarah Hardson",
+        time: '15 sec',
+        id:1,
+        avatar:'https://picsum.photos/200/300?random=11'
+      },
+      {
+        name:"Bob smith",
+        time: '15 sec',
+        id:2,
+        avatar:'https://picsum.photos/200/300?random=12'
+      },
+      {
+        name:"Carol Davis",
+        time: '15 sec',
+        id:3
+      },
+      {
+        name:"Sarah Hardson",
+        timestamp: '15 sec',
+        id:4,
+        avatar:'https://picsum.photos/200/300?random=13'
+      },
+    ]
+      
+      
+    },
+    {
+      id: '2',
+      text: 'How about when you get google meet do the rest for you',
+      author: { name: 'Carol Davis' },
+      timestamp: 'now',
+      isOwn: false,
+      reactions: { like: 3, comment: 0, share: 0, view: 8 },
+      child:true,
+      reply:"Bob smith"
+      
+  
+    },
+      ]
+      
       
     },
     {

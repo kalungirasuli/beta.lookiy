@@ -7,7 +7,6 @@ import SingleImage from './SingleImage';
 import SingleMedia from './SingleMedia';
 import MediaCarousel from './MediaCarousel';
 import MediaModal from './MediaModal';
-import {BiSolidRightArrow} from 'react-icons/bi';
 import {SlArrowRight} from 'react-icons/sl'
 
 interface MessageBubbleProps {
@@ -41,7 +40,7 @@ interface MessageBubbleProps {
   media?: (string | { src: string; type?: 'image' | 'video'; poster?: string; alt?: string })[];
   children?: MessageBubbleProps[];
   child?:boolean,
-  replies?: string[]
+  replies?: { name: string; id: string; time?: string; avatar?: string }[]
 }
 
 export default function MessageBubble({ 
@@ -49,7 +48,7 @@ export default function MessageBubble({
   text,   
   children,
   child = false,
-  replies = [],
+  replies=[],
   author, 
   timestamp, 
   isOwn = false,
@@ -93,6 +92,36 @@ export default function MessageBubble({
     });
   };
 
+  // Random color picker function for avatars with 900 degree colors
+  const getRandomAvatarColor = (name: string) => {
+    const colors = [
+      'bg-red-500',
+      'bg-blue-500', 
+      'bg-green-500',
+      'bg-yellow-500',
+      'bg-purple-500',
+      'bg-pink-500',
+      'bg-indigo-500',
+      'bg-orange-500',
+      'bg-teal-500',
+      'bg-cyan-500',
+      'bg-emerald-500',
+      'bg-lime-500',
+      'bg-amber-500',
+      'bg-violet-500',
+      'bg-fuchsia-500',
+      'bg-rose-500'
+    ];
+    
+    // Use name to generate consistent color for same person
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  };
+
   const handleSingleMediaClick = () => {
     if (media && media.length === 1) {
       setModalMedia(media);
@@ -110,7 +139,7 @@ export default function MessageBubble({
       setIsModalOpen(true);
     }
   };
-
+console.log(replies)
   return (
     <>
       {/* Main container with message and menu button */}
@@ -119,23 +148,33 @@ export default function MessageBubble({
         child === false ? "" : (
           <div className="flex items-center gap-1 mb-2 px-2">
             <div className="flex -space-x-2">
-              {children && children.slice(0, 5).map((childMessage, idx) => (
+              {replies && replies.length>0 && replies.slice(0, replies.length > 5 ? 5 : replies.length).map((reply, idx) => (
                 <div
-                  key={idx}
-                  className={`w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs border-2 border-white dark:border-gray-800 transition-transform hover:scale-110 cursor-pointer`}
-                  title={childMessage.author.name}
+                  key={reply.id || idx}
+                  className={`avatar w-6 h-6 rounded-full ${!reply.avatar ? getRandomAvatarColor(reply.name) : 'bg-gray-200'} flex items-center justify-center text-xs border-2 border-white dark:border-gray-800 transition-transform hover:scale-110 cursor-pointer overflow-hidden`}
+                  title={reply.name}
                 >
-                  {childMessage.author.name.charAt(0).toUpperCase()}
+                  {reply.avatar ? (
+                    <img 
+                      src={reply.avatar} 
+                      alt={reply.name}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <span className="text-white font-bold">
+                      {reply.name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
                 </div>
               ))}
-              {children && children.length > 5 && (
+              {replies && replies.length > 5 && (
                 <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-[10px] font-semibold border-2 border-white dark:border-gray-800 text-gray-700 dark:text-gray-200">
-                  +{children.length - 5}
+                  +{replies.length - 5}
                 </div>
               )}
             </div>
             <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-              {children ? children.length : 0} {children && children.length === 1 ? 'participant' : 'participants'}
+              {replies ? replies.length : 0} {replies && replies.length === 1 ? 'reply' : 'replies'}
             </span>
           </div>
         )
@@ -467,6 +506,16 @@ export default function MessageBubble({
         </div>
        
       </div>
+       <div className="ml-[10%] mt-2">
+        {
+          children && children.length>0 && (
+            children.map((child,indx)=>(
+              <MessageBubble {...child} key={indx} />
+            ))
+            
+          )
+        }
+       </div>
 
       {/* Media Modal */}
       {isModalOpen && (
