@@ -7,6 +7,8 @@ import SingleImage from './SingleImage';
 import SingleMedia from './SingleMedia';
 import MediaCarousel from './MediaCarousel';
 import MediaModal from './MediaModal';
+import {BiSolidRightArrow} from 'react-icons/bi';
+import {SlArrowRight} from 'react-icons/sl'
 
 interface MessageBubbleProps {
   id: string;
@@ -37,17 +39,23 @@ interface MessageBubbleProps {
   };
   images?: string[];
   media?: (string | { src: string; type?: 'image' | 'video'; poster?: string; alt?: string })[];
+  children?: MessageBubbleProps[];
+  child?:boolean,
+  replies?: string[]
 }
 
 export default function MessageBubble({ 
   id, 
-  text, 
+  text,   
+  children,
+  child = false,
+  replies = [],
   author, 
   timestamp, 
   isOwn = false,
   reactions = { like: 0, comment: 0, share: 0, view: 0 },
   reference,
-  images,
+  images,  
   media
 }: MessageBubbleProps) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -106,6 +114,32 @@ export default function MessageBubble({
   return (
     <>
       {/* Main container with message and menu button */}
+      {/* Avatar component for showing participants at a level */}
+      {   
+        child === false ? "" : (
+          <div className="flex items-center gap-1 mb-2 px-2">
+            <div className="flex -space-x-2">
+              {children && children.slice(0, 5).map((childMessage, idx) => (
+                <div
+                  key={idx}
+                  className={`w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs border-2 border-white dark:border-gray-800 transition-transform hover:scale-110 cursor-pointer`}
+                  title={childMessage.author.name}
+                >
+                  {childMessage.author.name.charAt(0).toUpperCase()}
+                </div>
+              ))}
+              {children && children.length > 5 && (
+                <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-[10px] font-semibold border-2 border-white dark:border-gray-800 text-gray-700 dark:text-gray-200">
+                  +{children.length - 5}
+                </div>
+              )}
+            </div>
+            <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+              {children ? children.length : 0} {children && children.length === 1 ? 'participant' : 'participants'}
+            </span>
+          </div>
+        )
+      }
       <div className={`flex   ${isOwn ? 'justify-end' : 'justify-start'} mb-1`}>
         <div className="flex relative gap-2" style={{ marginBottom: '5px' }}>
           {/* Message Bubble Container with Reactions */}
@@ -122,7 +156,7 @@ export default function MessageBubble({
                         {reference.author.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <span className="text-xs font-bold text-black">{reference.author.name}</span>
+                    <span className="text-xs font-bold text-black">{reference.author.name}</span> <span className="text-xs font-bold text-black">{reference.author.name}</span>
                   </div>
                   
                   {/* Content and Image Layout */}
@@ -195,6 +229,9 @@ export default function MessageBubble({
                     </span>
                   </div>
                   <span className="text-sm font-medium text-gray-700">{author.name}</span>
+                  <span className="text-sm font-medium text-gray-700"><SlArrowRight className='fill-slate-500 w-2 h-2'/></span>
+                  <span className='text-sm font-medium text-blue-700'>{author.name}</span>
+
                   {timestamp && (
                     <span className="text-xs text-gray-500">{timestamp}</span>
                   )}
