@@ -63,6 +63,61 @@ export default function TestMessagePage() {
         { src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', type: 'video' as const, poster: 'https://picsum.photos/200/300?random=7' },
         'https://picsum.photos/200/300?random=8'
       ],
+      children:[
+         {
+      id: '1',
+      text: 'Next week works perfectly for me! Tuesday afternoon would be ideal if that fits everyone\'s schedule.',
+      author: { name: 'Carol Davis' },
+      timestamp: '15 sec',
+      isOwn: false,
+      reactions: { like: 3, comment: 0, share: 0, view: 8 },
+      media: [
+        'https://picsum.photos/200/300?random=6',
+        { src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', type: 'video' as const, poster: 'https://picsum.photos/200/300?random=7' },
+        'https://picsum.photos/200/300?random=8'
+      ],
+      child:true,
+      replies:[{
+        name:"Sarah Hardson",
+        time: '15 sec',
+        id:1,
+        avatar:'https://picsum.photos/200/300?random=11'
+      },
+      {
+        name:"Bob smith",
+        time: '15 sec',
+        id:2,
+        avatar:'https://picsum.photos/200/300?random=12'
+      },
+      {
+        name:"Carol Davis",
+        time: '15 sec',
+        id:3
+      },
+      {
+        name:"Sarah Hardson",
+        timestamp: '15 sec',
+        id:4,
+        avatar:'https://picsum.photos/200/300?random=13'
+      },
+    ]
+      
+      
+    },
+    {
+      id: '2',
+      text: 'How about when you get google meet do the rest for you',
+      author: { name: 'Carol Davis' },
+      timestamp: 'now',
+      isOwn: false,
+      reactions: { like: 3, comment: 0, share: 0, view: 8 },
+      child:true,
+      reply:"Bob smith"
+      
+  
+    },
+      ]
+      
       
     },
     {
@@ -121,7 +176,64 @@ export default function TestMessagePage() {
                 {...(message as any)}
               />
             ))}
-            <AudioRecord duration="2:30" createdAt="5m" />
+            
+            {/* Test AudioRecord with replies and children */}
+            <div className="space-y-4 mt-8">
+              <h3 className="text-lg font-semibold">Audio Messages Test</h3>
+              
+              {/* Audio message with replies - not own */}
+              <AudioRecord
+                audioUrl="/audio/sample.mp3"
+                duration="2:30"
+                createdAt="5 min ago"
+                isOwn={false}
+                replies={[
+                  { name: "Alice", id: "r1", time: "2 min ago", avatar: "https://picsum.photos/40/40?random=1" },
+                  { name: "Bob", id: "r2", time: "1 min ago" },
+                  { name: "Carol", id: "r3", time: "30 sec ago", avatar: "https://picsum.photos/40/40?random=2" }
+                ]}
+              />
+              
+              {/* Audio message with replies - own */}
+              <AudioRecord
+                audioUrl="/audio/sample2.mp3"
+                duration="1:45"
+                createdAt="3 min ago"
+                isOwn={true}
+                replies={[
+                  { name: "David", id: "r4", time: "1 min ago" },
+                  { name: "Eve", id: "r5", time: "45 sec ago", avatar: "https://picsum.photos/40/40?random=3" },
+                  { name: "Frank", id: "r6", time: "20 sec ago" },
+                  { name: "Grace", id: "r7", time: "10 sec ago", avatar: "https://picsum.photos/40/40?random=4" }
+                ]}
+              />
+              
+              {/* Audio message with children */}
+              <AudioRecord
+                audioUrl="/audio/sample3.mp3"
+                duration="3:15"
+                createdAt="10 min ago"
+                isOwn={false}
+                children={[
+                  {
+                    audioUrl: "/audio/sample4.mp3",
+                    duration: "1:20",
+                    createdAt: "8 min ago",
+                    isOwn: true,
+                    replies: [
+                      { name: "Helen", id: "r8", time: "5 min ago" },
+                      { name: "Ivan", id: "r9", time: "3 min ago", avatar: "https://picsum.photos/40/40?random=5" }
+                    ]
+                  },
+                  {
+                    audioUrl: "/audio/sample5.mp3",
+                    duration: "0:45",
+                    createdAt: "6 min ago",
+                    isOwn: false
+                  }
+                ]}
+              />
+            </div>
           </div>
 
           <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
