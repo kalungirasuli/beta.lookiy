@@ -10,13 +10,24 @@ interface AudioRecordProps {
   duration?: string;
   createdAt?: string;
   className?: string;
+  isOwn?: boolean;
+  replies?: Array<{
+    name: string;
+    id: number | string;
+    time?: string;
+    avatar?: string;
+  }>;
+  children?: any[];
 }
 
 const AudioRecord: React.FC<AudioRecordProps> = ({
   audioUrl = '',
   duration = '0:30',
   createdAt = 'now',
-  className = ''
+  className = '',
+  isOwn = false,
+  replies = [],
+  children = []
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,6 +39,23 @@ const AudioRecord: React.FC<AudioRecordProps> = ({
 
   // Generate random frequency bars data
   const frequencyBars = Array.from({ length: 30 }, () => Math.random() * 100 + 10);
+
+  // Random color generator for avatars
+  const getRandomAvatarColor = (name: string) => {
+    const colors = [
+      'bg-red-900', 'bg-blue-900', 'bg-green-900', 'bg-yellow-900',
+      'bg-purple-900', 'bg-pink-900', 'bg-indigo-900', 'bg-teal-900',
+      'bg-orange-900', 'bg-cyan-900', 'bg-lime-900', 'bg-emerald-900',
+      'bg-violet-900', 'bg-fuchsia-900', 'bg-rose-900', 'bg-sky-900'
+    ];
+    
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    return colors[Math.abs(hash) % colors.length];
+  };
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -88,10 +116,47 @@ const AudioRecord: React.FC<AudioRecordProps> = ({
 
   return (
     <>
-    <div className="div flex gap-2 " style={{
+    {/* Avatar component for showing participants at a level */}
+    {replies && replies.length > 0 && (
+      <div className={`flex items-center gap-1 mb-2 px-2 ${isOwn ? 'justify-end' : 'justify-start'}`}>
+        <div className={`flex items-center gap-1 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}>
+          <div className="flex -space-x-2">
+            {replies.slice(0, replies.length > 5 ? 5 : replies.length).map((reply, idx) => (
+              <div
+                key={reply.id || idx}
+                className={`avatar w-6 h-6 rounded-full ${!reply.avatar ? getRandomAvatarColor(reply.name) : 'bg-gray-200'} flex items-center justify-center text-xs border-2 border-white dark:border-gray-800 transition-transform hover:scale-110 cursor-pointer overflow-hidden`}
+                title={reply.name}
+              >
+                {reply.avatar ? (
+                  <img 
+                    src={reply.avatar} 
+                    alt={reply.name}
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                ) : (
+                  <span className="text-white font-bold">
+                    {reply.name.charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </div>
+            ))}
+            {replies.length > 5 && (
+              <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-[10px] font-semibold border-2 border-white dark:border-gray-800 text-gray-700 dark:text-gray-200">
+                +{replies.length - 5}
+              </div>
+            )}
+          </div>
+          <span className={`text-xs text-gray-500 dark:text-gray-400 ${isOwn ? 'mr-1' : 'ml-1'}`}>
+            {replies.length} {replies.length === 1 ? 'reply' : 'replies'}
+          </span>
+        </div>
+      </div>
+    )}
+    
+    <div className={`div flex gap-2 ${isOwn ? 'justify-end' : 'justify-start'}`} style={{
       marginBottom:'5px'
     }}>
-    <div className={`bg-white border-2 border-black rounded-xl p-2 w-[200px] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 ${className}`}>
+    <div className={`bg-white border-2 border-black rounded-xl p-2 w-[200px] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 ${isOwn ? 'bg-orange-50' : 'bg-white'} ${className}`}>
       {/* Audio element */}
       {audioUrl && (
         <audio ref={audioRef} src={audioUrl} preload="metadata" />
@@ -202,6 +267,15 @@ const AudioRecord: React.FC<AudioRecordProps> = ({
           <span className='badge text-white text-[10px] bg-red-500 rounded-full font-bold absolute top-[-7px] right-[-7px] w-4 h-4 flex items-center justify-center border-2 border-white'>2</span>
         </button>
       </div>
+    </div>
+    
+    {/* Children Messages */}
+    <div className={`children mt-2 ${isOwn ? 'mr-[10%]' : 'ml-[10%]'}`}>
+      {children && children.length > 0 && (
+        children.map((child, indx) => (
+          <AudioRecord {...child} key={indx} />
+        ))
+      )}
     </div>
     </>
   );

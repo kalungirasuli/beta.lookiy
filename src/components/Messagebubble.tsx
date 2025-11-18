@@ -184,7 +184,7 @@ console.log(replies)
           {/* Message Bubble Container with Reactions */}
           <div className="relative mb-3">
             {/* Message Bubble */}
-            <div className={`max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg bg-white rounded-xl border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 ${isOwn ? 'bg-orange-50' : 'bg-white'}`}>
+            <div className={`max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg rounded-xl p-4 transition-all duration-150 ${isOwn ? 'bg-orange-50' : 'bg-white'} ${!child ? 'border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]' : 'border border-gray-200'}`}>
               
               {/* Reference/Reply Section */}
               {reference && (
@@ -334,52 +334,52 @@ console.log(replies)
             </div>
 
             {/* Reaction Icons - Outside bubble, attached to bottom border */}
-            <div className="flex justify-start mt-2  ml-4">
-              <div className="flex gap-1">
-                {/* Like Button */}
-                <button
-                  onClick={() => toggleReaction('like')}
-                  className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
-                    activeReactions[id]?.has('like')
-                      ? 'bg-white text-red-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,127,0.8)]'
-                      : 'bg-white text-red-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,127,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(220,38,127,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
-                  } duration-150`}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-xs font-bold">{reactions.like}</span>
-                </button>
+              <div className="flex justify-start mt-2  ml-4">
+                <div className="flex gap-1">
+                  {/* Like Button */}
+                  <button
+                    onClick={() => toggleReaction('like')}
+                    className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+                      activeReactions[id]?.has('like')
+                        ? 'bg-white text-red-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,127,0.8)]'
+                        : 'bg-white text-red-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,127,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(220,38,127,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
+                    } duration-150`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-xs font-bold">{reactions.like}</span>
+                  </button>
 
-                {/* Comment Button */}
-                <button
-                  onClick={() => toggleReaction('comment')}
-                  className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer relative ${
-                    activeReactions[id]?.has('comment')
-                      ? 'bg-white text-blue-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(59,130,246,0.8)]'
-                      : 'bg-white text-blue-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(59,130,246,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(59,130,246,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
-                  } duration-150`}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-                  </svg>
-                  {/* <span className="text-xs font-bold">{reactions.comment}</span> */}
-                  {reactions.comment > 0 && (
-                    <span className="badge text-white text-[10px] bg-red-500 rounded-full font-bold absolute top-[-7px] right-[-7px] w-4 h-4 flex items-center justify-center border-2 border-white">
-                      {reactions.comment}
-                    </span>
-                  )}
-                </button>
-               
+                  {/* Comment Button */}
+                  <button
+                    onClick={() => toggleReaction('comment')}
+                    className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all cursor-pointer relative ${
+                      activeReactions[id]?.has('comment')
+                        ? 'bg-white text-blue-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(59,130,246,0.8)]'
+                        : 'bg-white text-blue-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(59,130,246,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(59,130,246,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]'
+                    } duration-150`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                    </svg>
+                    {/* <span className="text-xs font-bold">{reactions.comment}</span> */}
+                    {reactions.comment > 0 && (
+                      <span className="badge text-white text-[10px] bg-red-500 rounded-full font-bold absolute top-[-7px] right-[-7px] w-4 h-4 flex items-center justify-center border-2 border-white">
+                        {reactions.comment}
+                      </span>
+                    )}
+                  </button>
+                
+                </div>
               </div>
-            </div>
           </div>
 
           {/* Menu Button - Separate from message bubble */}
           <div className="relative" ref={menuRef}>
             <button 
               onClick={() => setActiveMenu(activeMenu === id ? null : id)}
-              className="flex-shrink-0 bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 p-1.5 text-gray-700 hover:text-gray-900"
+              className={`flex-shrink-0 bg-white rounded-lg p-1.5 text-gray-700 hover:text-gray-900 transition-all duration-150 ${!child ? 'border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] hover:translate-x-[2px] hover:translate-y-[2px]' : 'border border-gray-200'}`}
               aria-label="Message options menu"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 font-bold" viewBox="0 0 20 20" fill="currentColor">
@@ -506,11 +506,11 @@ console.log(replies)
         </div>
        
       </div>
-       <div className="ml-[10%] mt-2">
+       <div className={`children mt-2 ${isOwn ? 'mr-[10%]' : 'ml-[10%]'}`}>
         {
           children && children.length>0 && (
             children.map((child,indx)=>(
-              <MessageBubble {...child} key={indx} />
+              <MessageBubble {...child} key={indx} child={true} />
             ))
             
           )

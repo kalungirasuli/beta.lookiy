@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
+import axios from 'axios';
 
 export default function JoinWaitingListForm() {
   // Form state
@@ -49,13 +50,35 @@ export default function JoinWaitingListForm() {
       return;
     }
     
-    // Simulate API call
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
+      setLoading(false);
+      return;
+    }
+
     try {
-      // In a real app, you would send data to your API here
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setSubmitted(true);
-    } catch (err) {
-      setError('Something went wrong. Please try again.');
+      // Make API request to subscribe to waitlist
+      const response = await axios.post('/api/waitlist', {
+        name,
+        email,
+      });
+
+      if (response.status === 201) {
+        setSubmitted(true);
+        setEmail('');
+        setName('');
+      }
+    } catch (err: unknown) {
+      const error = err as { response?: { status: number; data?: { message: string } } };
+      if (error.response?.status === 409) {
+        setError('This email is already on the waitlist!');
+      } else if (error.response?.status === 400) {
+        setError(error.response.data?.message || 'Please fill in all fields');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
