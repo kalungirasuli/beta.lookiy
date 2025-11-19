@@ -31,17 +31,17 @@ export default function PolicyPage() {
 
   const sections = [
     {
-      title: '1. Acceptance of Terms',
+      title: 'Acceptance of Terms',
       content:
         'By accessing or using this website, you agree to follow all terms, conditions, and policies outlined here. If you do not agree, do not use this site. This website is private digital property. Unauthorized use, misuse, or access for unlawful purposes is strictly prohibited.',
     },
     {
-      title: '2. Ownership & Intellectual Property',
+      title: 'Ownership & Intellectual Property',
       content:
         'All content, designs, code, branding, features, and materials on this site are the exclusive property of the owner. You may not copy, reproduce, distribute, modify, reverse-engineer, or use any part of this platform for any purpose not explicitly authorized.',
     },
     {
-      title: '3. User Responsibilities',
+      title: 'User Responsibilities',
       content:
         'Users agree not to use this site in any manner that is illegal or harmful. Do not attempt to hack, exploit, or disrupt system operations. Do not submit false or misleading information, use any automated tools without permission, or interfere with the privacy or rights of other users. Any violation may result in denial of access or legal action.',
       bullets: [
@@ -53,17 +53,17 @@ export default function PolicyPage() {
       ],
     },
     {
-      title: '4. Waiting List Registration',
+      title: ' Waiting List Registration',
       content:
         'By joining the waiting list, you agree to provide accurate information and allow the platform to contact you regarding updates, access, or product announcements. Do not impersonate any person or entity. Joining the waiting list does not guarantee immediate access or service availability.',
     },
     {
-      title: '5. Data Collection & Privacy',
+      title: 'Data Collection & Privacy',
       content:
         'We collect basic information that you voluntarily submit when joining the waiting list (such as your name, email address, or preferences). Your data will not be shared, sold, or exposed to any third party that is not part of the core application infrastructure.',
     },
     {
-      title: '6. How Your Data Is Used',
+      title: ' How Your Data Is Used',
       content:
         'Your data may be used strictly for improving user experience, understanding user demand, communicating updates about the platform, and enhancing product development.',
       bullets: [
@@ -74,22 +74,22 @@ export default function PolicyPage() {
       ],
     },
     {
-      title: '7. Third-Party Components',
+      title: ' Third-Party Components',
       content:
         'Some parts of the site may use secure infrastructure or hosting services. These components only process data as required to operate the platform and do not own, access, or claim rights to your information.',
     },
     {
-      title: '8. Security',
+      title: ' Security',
       content:
         'We implement reasonable safeguards to protect your data. However, no online system is 100% secure, and users accept that risk when submitting information.',
     },
     {
-      title: '9. Modifications to This Policy',
+      title: ' Modifications to This Policy',
       content:
         'We may update these terms at any time. Continued use of the site after changes means you accept the new terms.',
     },
     {
-      title: '10. Contact',
+      title: ' Contact',
       content:
         'For any questions or concerns about these terms or your data, please contact us through the information provided on our website.',
     },
@@ -217,7 +217,7 @@ export default function PolicyPage() {
 
             {/* Acknowledgment */}
             <motion.div
-              className="mt-12 p-6 bg-gray-50 border-l-4 border-purple-600 rounded"
+              className="mt-12 p-6 bg-gray-50 border-l-4 border-orange-600 rounded"
               variants={itemVariants}
               initial="hidden"
               whileInView="visible"
