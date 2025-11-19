@@ -131,7 +131,7 @@ export default function RealPeopleSection() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
             >
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 md:mb-8 text-black tracking-tight flex flex-col text-center sm:text-left">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 md:mb-8 text-black tracking-tight flex flex-col text-center sm:text-left">
                 <motion.span 
                   className="mb-4"
                   initial={{ opacity: 0, y: 20 }}
