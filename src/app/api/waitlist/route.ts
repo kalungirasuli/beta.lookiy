@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { render } from 'react-email';
+import React from 'react';
+import { render } from '@react-email/render';
 import { WaitlistWelcomeEmail } from '@/emails/WaitlistWelcome';
 import sgMail from '@sendgrid/mail';
 
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     // Render email template
     const emailHtml = await render(
-      WaitlistWelcomeEmail({ 
+      React.createElement(WaitlistWelcomeEmail, {
         userName: name.trim().split(' ')[0],
       })
     );

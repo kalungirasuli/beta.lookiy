@@ -1,128 +1,128 @@
-'use client';
+// 'use client';
 
-import { useState } from 'react';
-import SingleVideo from './SingleVideo';
+// import { useState } from 'react';
+// import SingleVideo from './SingleVideo';
 
-interface SingleMediaProps {
-  src: string;
-  alt: string;
-  className?: string;
-  type?: 'image' | 'video';
-  poster?: string;
-}
+// interface SingleMediaProps {
+//   src: string;
+//   alt: string;
+//   className?: string;
+//   type?: 'image' | 'video';
+//   poster?: string;
+// }
 
-export default function SingleMedia({ src, alt, className = '', type, poster }: SingleMediaProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+// export default function SingleMedia({ src, alt, className = '', type, poster }: SingleMediaProps) {
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [hasError, setHasError] = useState(false);
+//   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Auto-detect media type if not provided
-  const mediaType = type || (src.match(/\.(mp4|webm|ogg|mov|avi)$/i) ? 'video' : 'image');
+//   // Auto-detect media type if not provided
+//   const mediaType = type || (src.match(/\.(mp4|webm|ogg|mov|avi)$/i) ? 'video' : 'image');
 
-  const handleImageLoad = () => {
-    setIsLoading(false);
-  };
+//   const handleImageLoad = () => {
+//     setIsLoading(false);
+//   };
 
-  const handleImageError = () => {
-    setIsLoading(false);
-    setHasError(true);
-  };
+//   const handleImageError = () => {
+//     setIsLoading(false);
+//     setHasError(true);
+//   };
 
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
+//   const toggleExpanded = () => {
+//     setIsExpanded(!isExpanded);
+//   };
 
-  if (hasError) {
-    return (
-      <div className={`flex items-center justify-center bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 ${className}`}>
-        <div className="text-center p-4">
-          <div className="text-gray-400 mb-2">
-            <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <p className="text-sm text-gray-500">Failed to load {mediaType}</p>
-        </div>
-      </div>
-    );
-  }
+//   if (hasError) {
+//     return (
+//       <div className={`flex items-center justify-center bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 ${className}`}>
+//         <div className="text-center p-4">
+//           <div className="text-gray-400 mb-2">
+//             <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+//             </svg>
+//           </div>
+//           <p className="text-sm text-gray-500">Failed to load {mediaType}</p>
+//         </div>
+//       </div>
+//     );
+//   }
 
-  if (mediaType === 'video') {
-    return (
-      <div className={`relative ${className}`}>
-        <SingleVideo
-          src={src}
-          alt={alt}
-          poster={poster}
-          className="w-full h-auto"
-          muted={true}
-          autoPlay={false}
-        />
-      </div>
-    );
-  }
+//   if (mediaType === 'video') {
+//     return (
+//       <div className={`relative ${className}`}>
+//         <SingleVideo
+//           src={src}
+//           alt={alt}
+//           poster={poster}
+//           className="w-full h-auto"
+//           muted={true}
+//           autoPlay={false}
+//         />
+//       </div>
+//     );
+//   }
 
-  // Image rendering (original SingleImage logic)
-  return (
-    <>
-      <div className={`relative overflow-hidden rounded-lg group ${className}`}>
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-          </div>
-        )}
+//   // Image rendering (original SingleImage logic)
+//   return (
+//     <>
+//       <div className={`relative overflow-hidden rounded-lg group ${className}`}>
+//         {isLoading && (
+//           <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+//             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+//           </div>
+//         )}
         
-        <img
-          src={src}
-          alt={alt}
-          onLoad={handleImageLoad}
-          onError={handleImageError}
-          onClick={toggleExpanded}
-          className={`
-            w-full h-auto max-w-sm mx-auto cursor-pointer
-            object-contain rounded-lg
-            transition-all duration-300 ease-in-out
-            hover:shadow-lg hover:scale-[1.02]
-            ${isLoading ? 'opacity-0' : 'opacity-100'}
-          `}
-          style={{
-            maxHeight: '400px',
-            minHeight: '200px'
-          }}
-        />
+//         <img
+//           src={src}
+//           alt={alt}
+//           onLoad={handleImageLoad}
+//           onError={handleImageError}
+//           onClick={toggleExpanded}
+//           className={`
+//             w-full h-auto max-w-sm mx-auto cursor-pointer
+//             object-contain rounded-lg
+//             transition-all duration-300 ease-in-out
+//             hover:shadow-lg hover:scale-[1.02]
+//             ${isLoading ? 'opacity-0' : 'opacity-100'}
+//           `}
+//           style={{
+//             maxHeight: '400px',
+//             minHeight: '200px'
+//           }}
+//         />
 
-        {/* Click to expand indicator */}
-        <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded transition-opacity duration-200 pointer-events-none group-hover:opacity-100 opacity-0">
-          Click to expand
-        </div>
-      </div>
+//         {/* Click to expand indicator */}
+//         <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded transition-opacity duration-200 pointer-events-none group-hover:opacity-100 opacity-0">
+//           Click to expand
+//         </div>
+//       </div>
 
-      {/* Expanded Modal for Image */}
-      {isExpanded && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[9999] p-4"
-          onClick={toggleExpanded}
-        >
-          <div className="relative max-w-4xl max-h-full">
-            <img
-              src={src}
-              alt={alt}
-              className="max-w-full max-h-full object-contain rounded-lg"
-              onClick={(e) => e.stopPropagation()}
-            />
+//       {/* Expanded Modal for Image */}
+//       {isExpanded && (
+//         <div 
+//           className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[9999] p-4"
+//           onClick={toggleExpanded}
+//         >
+//           <div className="relative max-w-4xl max-h-full">
+//             <img
+//               src={src}
+//               alt={alt}
+//               className="max-w-full max-h-full object-contain rounded-lg"
+//               onClick={(e) => e.stopPropagation()}
+//             />
             
-            {/* Close button */}
-            <button
-              onClick={toggleExpanded}
-              className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-200"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
+//             {/* Close button */}
+//             <button
+//               onClick={toggleExpanded}
+//               className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-200"
+//             >
+//               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+//               </svg>
+//             </button>
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// }
