@@ -85,7 +85,7 @@ export default function UseCasesSection() {
             <div className="md:w-1/2 flex justify-center md:justify-end">
               <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-white p-4 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]">
                 <img 
-                  src="/WFH_SVG 3/wfh_6.svg" 
+                  src="/usecase/event.svg" 
                   alt="Events Use Case" 
                   className="w-full h-full object-contain"
                 />
@@ -114,7 +114,7 @@ export default function UseCasesSection() {
             <div className="md:w-1/2 flex justify-center md:justify-start">
               <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-white p-4 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]">
                 <img 
-                  src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (10).svg" 
+                  src="/usecase/phys.svg" 
                   alt="Education Use Case" 
                   className="w-full h-full object-contain"
                 />
@@ -143,7 +143,7 @@ export default function UseCasesSection() {
             <div className="md:w-1/2 flex justify-center md:justify-end">
               <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-white p-4 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]">
                 <img 
-                  src="/WFH_SVG 3/wfh_7.svg" 
+                  src="/usecase/common.svg" 
                   alt="Community Use Case" 
                   className="w-full h-full object-contain"
                 />
