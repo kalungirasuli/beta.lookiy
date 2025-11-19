@@ -50,35 +50,13 @@ export default function JoinWaitingListForm() {
       return;
     }
     
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('Please enter a valid email address');
-      setLoading(false);
-      return;
-    }
-
+    // Simulate API call
     try {
-      // Make API request to subscribe to waitlist
-      const response = await axios.post('/api/waitlist', {
-        name,
-        email,
-      });
-
-      if (response.status === 201) {
-        setSubmitted(true);
-        setEmail('');
-        setName('');
-      }
-    } catch (err: unknown) {
-      const error = err as { response?: { status: number; data?: { message: string } } };
-      if (error.response?.status === 409) {
-        setError('This email is already on the waitlist!');
-      } else if (error.response?.status === 400) {
-        setError(error.response.data?.message || 'Please fill in all fields');
-      } else {
-        setError('Something went wrong. Please try again.');
-      }
+      // In a real app, you would send data to your API here
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setSubmitted(true);
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -214,7 +192,7 @@ export default function JoinWaitingListForm() {
           )}
           
           {/* Decorative elements */}
-          <motion.div 
+          {/* <motion.div 
             className="absolute -bottom-10 -left-10 w-20 h-20 md:w-32 md:h-32 hidden md:block"
             initial={{ opacity: 0, scale: 0 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -222,7 +200,7 @@ export default function JoinWaitingListForm() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <img 
-              src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (3).svg" 
+              src="/usecase/real.svg" 
               alt="Decorative element" 
               className="w-full h-full object-contain"
             />
@@ -236,11 +214,11 @@ export default function JoinWaitingListForm() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <img 
-              src="/DrawKit Vector Illustration Mental Health & Psychology 2/SVG/DrawKit Vector Illustration Mental Health & Psychology (4).svg" 
+              src="/usecase/just1.svg" 
               alt="Decorative element" 
               className="w-full h-full object-contain"
             />
-          </motion.div>
+          </motion.div> */}
         </div>
       </div>
     </section>
