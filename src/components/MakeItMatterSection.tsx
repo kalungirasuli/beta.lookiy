@@ -59,8 +59,8 @@ export default function MakeItMatterSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-black tracking-tight">
-            How You'll <span className="text-gray-200 bg-gray-600 px-2 py-1 rounded-md">Make It Matter</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 text-black tracking-tight">
+            How You'll<br className='block md:hidden'></br> <span className="text-gray-200 bg-gray-600 px-2 py-1 rounded-md md:mt-0">Make It Matter</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
             Turn connections into opportunities that align with what matters to you

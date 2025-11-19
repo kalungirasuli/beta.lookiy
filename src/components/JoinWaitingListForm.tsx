@@ -88,8 +88,8 @@ export default function JoinWaitingListForm() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-black tracking-tight">
-            Join the <span className="text-purple-100 bg-purple-600 px-2 py-1 rounded-md mx-2">Waitlist</span>
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 text-black tracking-tight">
+           Join the <span className="text-purple-100 bg-purple-600 px-2 py-1 rounded-md mx-2">Waitlist</span>
           </h2>
           <motion.p 
             className="text-lg md:text-xl text-gray-700 max-w-4xl mx-auto mb-6"
