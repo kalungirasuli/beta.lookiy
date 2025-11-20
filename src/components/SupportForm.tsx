@@ -60,13 +60,44 @@ export default function SupportForm() {
       return;
     }
     
-    // Simulate API call
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
+      setLoading(false);
+      return;
+    }
+    
+    // Call actual API
     try {
-      // In a real app, you would send data to your API here
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch('/api/support', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          supportType: supportType,
+          message: message.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || 'Something went wrong. Please try again.');
+        return;
+      }
+
       setSubmitted(true);
+      setEmail('');
+      setName('');
+      setSupportType('');
+      setMessage('');
     } catch (err) {
       setError('Something went wrong. Please try again.');
+      console.error('Error:', err);
     } finally {
       setLoading(false);
     }

@@ -7,7 +7,9 @@ export default function JoinWaitingListForm() {
   // Form state
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [type,setType]=useState('Individual')
+  const [type, setType] = useState('Individual');
+  const [companyName, setCompanyName] = useState('');
+  const [companyDescription, setCompanyDescription] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -45,7 +47,14 @@ export default function JoinWaitingListForm() {
     
     // Validate form
     if (!email || !name || !type) {
-      setError('Please fill in all fields');
+      setError('Please fill in all required fields');
+      setLoading(false);
+      return;
+    }
+
+    // Validate company fields if type is Company/Organization
+    if (type === 'Company/Organization' && (!companyName || !companyDescription)) {
+      setError('Please fill in company name and description');
       setLoading(false);
       return;
     }
@@ -69,6 +78,8 @@ export default function JoinWaitingListForm() {
           name: name.trim(),
           email: email.trim(),
           type: type,
+          companyName: type === 'Company/Organization' ? companyName.trim() : null,
+          companyDescription: type === 'Company/Organization' ? companyDescription.trim() : null,
         }),
       });
 
@@ -83,6 +94,8 @@ export default function JoinWaitingListForm() {
       setEmail('');
       setName('');
       setType('Individual');
+      setCompanyName('');
+      setCompanyDescription('');
     } catch (err) {
       setError('Something went wrong. Please try again.');
       console.error('Error:', err);
@@ -190,6 +203,37 @@ export default function JoinWaitingListForm() {
                   <option value="Company/Organization">Company/Organization</option>
                 </select>
               </motion.div>
+
+              {/* Company Fields - Show only when type is Company/Organization */}
+              {type === 'Company/Organization' && (
+                <>
+                  <motion.div className="mb-6" variants={itemVariants} initial="hidden" animate="visible">
+                    <label htmlFor="companyName" className="block text-gray-700 font-medium mb-2">Company Name</label>
+                    <input
+                      type="text"
+                      id="companyName"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                      placeholder="Enter your company name"
+                      required={type === 'Company/Organization'}
+                    />
+                  </motion.div>
+
+                  <motion.div className="mb-8" variants={itemVariants} initial="hidden" animate="visible">
+                    <label htmlFor="companyDescription" className="block text-gray-700 font-medium mb-2">Company Description</label>
+                    <textarea
+                      id="companyDescription"
+                      value={companyDescription}
+                      onChange={(e) => setCompanyDescription(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all resize-none"
+                      placeholder="Tell us about your company"
+                      rows={4}
+                      required={type === 'Company/Organization'}
+                    />
+                  </motion.div>
+                </>
+              )}
               
               <motion.div variants={itemVariants} initial="hidden" animate="visible">
                 <button

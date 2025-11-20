@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
   
   try {
     console.log('📍 [WAITLIST API] Parsing request body...');
-    const { name, email, type } = await request.json();
-    console.log('📍 [WAITLIST API] Received data:', { name, email, type });
+    const { name, email, type, companyName, companyDescription } = await request.json();
+    console.log('📍 [WAITLIST API] Received data:', { name, email, type, companyName, companyDescription });
 
     // Validate input
     if (!name || !email || !type) {
@@ -31,6 +31,16 @@ export async function POST(request: NextRequest) {
       );
     }
     console.log('✅ [WAITLIST API] Basic validation passed');
+
+    // Validate company fields if type is Company/Organization
+    if (type === 'Company/Organization' && (!companyName || !companyDescription)) {
+      console.log('❌ [WAITLIST API] Validation failed: Missing company fields');
+      return NextResponse.json(
+        { message: 'Company name and description are required for Company/Organization type' },
+        { status: 400 }
+      );
+    }
+    console.log('✅ [WAITLIST API] Company field validation passed');
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -61,13 +71,21 @@ export async function POST(request: NextRequest) {
 
     // Add to Firestore
     console.log('📍 [WAITLIST API] Saving to Firestore...');
-    const docRef = await addDoc(waitlistCollection, {
+    const firestoreData: Record<string, string | boolean> = {
       name: name.trim(),
       email: email.toLowerCase(),
       type: type.trim(),
       subscribedAt: new Date().toISOString(),
       status: 'active',
-    });
+    };
+    
+    // Add company fields if provided
+    if (type === 'Company/Organization') {
+      firestoreData.companyName = companyName?.trim() || '';
+      firestoreData.companyDescription = companyDescription?.trim() || '';
+    }
+    
+    const docRef = await addDoc(waitlistCollection, firestoreData);
     console.log('✅ [WAITLIST API] Successfully saved to Firestore with ID:', docRef.id);
 
     // Render email template

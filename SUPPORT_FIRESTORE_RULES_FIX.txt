@@ -1,0 +1,128 @@
+# Firestore Security Rules Fix for Support Form
+
+## Issue
+When submitting support requests, you're getting:
+```
+PERMISSION_DENIED: Missing or insufficient permissions
+```
+
+## Root Cause
+Firestore default security rules deny all client-side read/write access. Since the API route uses the client-side Firebase SDK, it inherits these restrictions.
+
+## Solution
+
+### Step 1: Go to Firebase Console
+1. Open [Firebase Console](https://console.firebase.google.com)
+2. Select your "beta-lookiy" project
+3. Go to **Firestore Database** → **Rules** tab
+
+### Step 2: Update Rules
+
+Replace the existing rules with these (add support_requests collection):
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Waitlist collection - allow reads from authenticated users, writes from anyone
+    match /waitlist/{document=**} {
+      allow read: if true;
+      allow create: if request.resource.data.email != null && 
+                       request.resource.data.name != null &&
+                       request.resource.data.type != null;
+      allow update, delete: if request.auth != null;
+    }
+
+    // Support requests collection - allow reads from authenticated users, writes from anyone
+    match /support_requests/{document=**} {
+      allow read: if true;
+      allow create: if request.resource.data.email != null && 
+                       request.resource.data.name != null &&
+                       request.resource.data.supportType != null;
+      allow update, delete: if request.auth != null;
+    }
+
+    // Default deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+```
+
+### Step 3: Publish Rules
+1. Click **Publish** button
+2. Confirm the update
+3. Wait for the rules to deploy (usually 10-30 seconds)
+
+## Testing
+
+After updating rules, try submitting the support form again. You should see:
+
+```
+✅ [SUPPORT API] Basic validation passed
+✅ [SUPPORT API] Email format validation passed
+📍 [SUPPORT API] Saving to Firestore...
+✅ [SUPPORT API] Successfully saved to Firestore with ID: xxx
+📍 [SUPPORT API] Rendering email template...
+✅ [SUPPORT API] Email template rendered successfully
+...
+```
+
+## Security Notes
+
+The rules above allow:
+- **CREATE** operations only if required fields are present
+- **READ** operations for everyone (you can restrict this to authenticated users if needed)
+- **UPDATE/DELETE** only for authenticated users (additional security)
+
+For production, you may want stricter rules:
+
+```javascript
+// Stricter rules - require authentication for writes
+match /support_requests/{document=**} {
+  allow read: if request.auth != null;
+  allow create: if request.auth != null &&
+                   request.resource.data.email != null && 
+                   request.resource.data.name != null &&
+                   request.resource.data.supportType != null;
+  allow update, delete: if request.auth != null;
+}
+```
+
+But for now, the rules above will work for both waitlist and support forms.
+
+## Field Logging
+
+The API now logs all fields being collected:
+
+**What's being collected:**
+- `name` - User's name
+- `email` - User's email address
+- `supportType` - Type of support (feedback, testing, promotion, investment, other)
+- `message` - Additional details/message (optional)
+
+**API Log Output:**
+```
+📍 [SUPPORT API] Received data: {
+  name: 'John Doe',
+  email: 'john@example.com',
+  supportType: 'investment',
+  message: 'We are interested in learning more...'
+}
+```
+
+## Troubleshooting
+
+If you still get permission denied after updating rules:
+
+1. **Clear browser cache** - JavaScript SDK sometimes caches old rules
+2. **Check project ID** - Ensure `NEXT_PUBLIC_FIREBASE_PROJECT_ID` in `.env.local` matches your Firebase project
+3. **Wait for deployment** - Rules can take 30+ seconds to deploy
+4. **Check rules syntax** - Use Firebase Console's rule validation (it shows errors)
+5. **Check database location** - Make sure Firestore is in the same region (us-central1 is fine)
+
+---
+
+**Note:** Once you update these rules, both the waitlist and support forms should work!
