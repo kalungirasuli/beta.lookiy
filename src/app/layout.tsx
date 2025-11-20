@@ -21,10 +21,75 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Lookiy - Discover and Join Networks Instantly",
-  description: "Search for networks in real-time and connect with nodes around the world.",
+  title: "Lookiy - The Way to Africa and World's Next Generation of Social Communication",
+  description: "Lookiy is the way to Africa and the world's next generation of social communication in the digital space. Making lives easier than ever. Connect globally, build locally.",
+  keywords: [
+    'Lookiy',
+    'social communication',
+    'digital platform',
+    'Africa',
+    'social networking',
+    'global connection',
+    'digital communication',
+    'community platform',
+    'next generation social network',
+    'connecting people',
+    'digital space',
+    'networking app',
+    'social media alternative'
+  ],
+  authors: [{ name: 'Lookiy Team', url: 'https://lookiy.net' }],
+  creator: 'Lookiy Team',
+  publisher: 'Lookiy',
   icons: {
     icon: '/logomin.svg',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://lookiy.net',
+    siteName: 'Lookiy',
+    title: "Lookiy - The Way to Africa and World's Next Generation of Social Communication",
+    description: "Lookiy is the way to Africa and the world's next generation of social communication in the digital space. Making lives easier than ever.",
+    images: [
+      {
+        url: 'https://lookiy.net/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Lookiy - Next Generation Social Communication Platform',
+        type: 'image/png',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@LookiyApp',
+    creator: '@LookiyApp',
+    title: "Lookiy - The Way to Africa and World's Next Generation of Social Communication",
+    description: "Lookiy is the way to Africa and the world's next generation of social communication in the digital space. Making lives easier than ever.",
+    images: ['https://lookiy.net/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    },
+  },
+  referrer: 'strict-origin-when-cross-origin',
+  category: 'technology',
+  classification: 'Software',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
+  alternates: {
+    canonical: 'https://lookiy.net',
   },
 };
 
