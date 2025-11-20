@@ -1,0 +1,56 @@
+FIRESTORE SECURITY RULES FIX
+============================
+
+STEP 1: Go to Firebase Console
+- URL: https://console.firebase.google.com
+- Select project: lookiy-818c7
+
+STEP 2: Navigate to Firestore Rules
+- Click on "Firestore Database" in left menu
+- Click on "Rules" tab at the top
+
+STEP 3: Replace ALL rules with this:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow all reads and writes to waitlist collection
+    match /waitlist/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Deny all other access by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+```
+
+STEP 4: Click "Publish" button
+
+STEP 5: Test the form again - it should now work!
+
+IMPORTANT FOR PRODUCTION:
+These rules allow anyone to read/write to the waitlist.
+For production, use more restrictive rules like:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /waitlist/{document=**} {
+      // Allow creating new entries only with valid data
+      allow create: if 
+        request.resource.data.email is string &&
+        request.resource.data.name is string &&
+        request.resource.data.type is string &&
+        request.resource.data.email.matches('.*@.*\\..*');
+      
+      // Prevent reading/updating/deleting
+      allow read, update, delete: if false;
+    }
+  }
+}
+```

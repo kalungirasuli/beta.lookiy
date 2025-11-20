@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
-import axios from 'axios';
 
 export default function JoinWaitingListForm() {
   // Form state
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  const [type,setType]=useState('Individual')
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -44,19 +44,48 @@ export default function JoinWaitingListForm() {
     setError('');
     
     // Validate form
-    if (!email || !name) {
+    if (!email || !name || !type) {
       setError('Please fill in all fields');
       setLoading(false);
       return;
     }
     
-    // Simulate API call
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
+      setLoading(false);
+      return;
+    }
+    
+    // Call actual API
     try {
-      // In a real app, you would send data to your API here
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          type: type,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || 'Something went wrong. Please try again.');
+        return;
+      }
+
       setSubmitted(true);
+      setEmail('');
+      setName('');
+      setType('Individual');
     } catch (err) {
       setError('Something went wrong. Please try again.');
+      console.error('Error:', err);
     } finally {
       setLoading(false);
     }
@@ -146,6 +175,20 @@ export default function JoinWaitingListForm() {
                   placeholder="you@example.com"
                   required
                 />
+              </motion.div>
+
+              <motion.div className="mb-8" variants={itemVariants} initial="hidden" animate="visible">
+                <label htmlFor="type" className="block text-gray-700 font-medium mb-2">Account Type</label>
+                <select
+                  id="type"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all bg-white"
+                  required
+                >
+                  <option value="Individual">Individual</option>
+                  <option value="Company/Organization">Company/Organization</option>
+                </select>
               </motion.div>
               
               <motion.div variants={itemVariants} initial="hidden" animate="visible">
