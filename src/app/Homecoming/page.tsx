@@ -36,7 +36,7 @@ export default function Homecoming() {
       'social connection',
       'world connection'
     ],
-    ogImage: 'https://lookiy.net/logomin.png',
+    ogImage: 'https://lookiy.net/api/og?title=Lookiy%20-%20The%20Way%20to%20Africa%20and%20World%27s%20Next%20Generation%20of%20Social%20Communication&description=Making%20lives%20easier%20than%20ever.%20Connect%20globally%2C%20build%20locally.',
     ogUrl: 'https://lookiy.net',
     twitterHandle: '@LookiyApp',
     authorName: 'Lookiy Team',

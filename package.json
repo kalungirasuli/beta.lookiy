@@ -12,6 +12,7 @@
     "@react-email/components": "1.0.1",
     "@react-email/render": "2.0.0",
     "@sendgrid/mail": "^8.1.6",
+    "@vercel/og": "^0.6.2",
     "axios": "^1.13.2",
     "firebase": "^12.6.0",
     "framer-motion": "^12.23.12",

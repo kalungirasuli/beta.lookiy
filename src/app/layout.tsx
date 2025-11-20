@@ -53,28 +53,21 @@ export const metadata: Metadata = {
     description: "Lookiy is the way to Africa and the world's next generation of social communication in the digital space. Making lives easier than ever.",
     images: [
       {
-        url: 'https://lookiy.net/logomin.png',
-        width: 512,
-        height: 512,
-        alt: 'Lookiy Logo',
-        type: 'image/png',
-      },
-      {
-        url: 'https://lookiy.net/logo.svg',
-        width: 512,
-        height: 512,
+        url: 'https://lookiy.net/api/og?title=Lookiy%20-%20The%20Way%20to%20Africa%20and%20World%27s%20Next%20Generation%20of%20Social%20Communication&description=Making%20lives%20easier%20than%20ever.%20Connect%20globally%2C%20build%20locally.',
+        width: 1200,
+        height: 630,
         alt: 'Lookiy - Next Generation Social Communication Platform',
-        type: 'image/svg+xml',
+        type: 'image/png',
       }
     ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     site: '@LookiyApp',
     creator: '@LookiyApp',
     title: "Lookiy - The Way to Africa and World's Next Generation of Social Communication",
     description: "Lookiy is the way to Africa and the world's next generation of social communication in the digital space. Making lives easier than ever.",
-    images: ['https://lookiy.net/logomin.png'],
+    images: ['https://lookiy.net/api/og?title=Lookiy%20-%20The%20Way%20to%20Africa%20and%20World%27s%20Next%20Generation%20of%20Social%20Communication&description=Making%20lives%20easier%20than%20ever.%20Connect%20globally%2C%20build%20locally.'],
   },
   robots: {
     index: true,
