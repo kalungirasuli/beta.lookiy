@@ -229,7 +229,7 @@ export default function SupportForm() {
           )}
           
           {/* Decorative elements */}
-          <motion.div 
+          {/* <motion.div 
             className="absolute -bottom-10 -left-10 w-20 h-20 md:w-32 md:h-32 hidden md:block"
             initial={{ opacity: 0, scale: 0 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -255,7 +255,7 @@ export default function SupportForm() {
               alt="Decorative element" 
               className="w-full h-full object-contain"
             />
-          </motion.div>
+          </motion.div> */}
         </div>
       </div>
     </section>

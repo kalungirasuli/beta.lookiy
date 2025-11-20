@@ -9,6 +9,7 @@ import JoinWaitingListForm from '@/components/JoinWaitingListForm';
 
 export default function Homecoming() {
   return (
+    <>
     <div className="min-h-screen flex flex-col">
       {/* Animated background */}
       <AnimatedBackground />
@@ -35,7 +36,9 @@ export default function Homecoming() {
       </main>
       
       {/* Footer */}
-      <Footer />      
+         
     </div>
+     <Footer />  
+     </>
   );
 }
