@@ -123,8 +123,8 @@ export default function UseCasesSection() {
             
             {/* Left side - Content */}
             <div className="md:w-1/2 text-center md:text-right">
-              <h3 className="text-2xl font-bold text-purple-600 mb-3">Schools & Education</h3>
-              <p className="text-gray-700">Help students and faculty discover shared academic interests, form study groups, and build a supportive learning community.</p>
+              <h3 className="text-2xl font-bold text-purple-600 mb-3">Education & Communities</h3>
+              <p className="text-gray-700">Help students and faculty discover shared academic interests, form study groups, and build a supportive learning community. Managing a school club, or setting up a research community lookiy got covered </p>
             </div>
           </motion.div>
           
@@ -152,8 +152,8 @@ export default function UseCasesSection() {
             
             {/* Right side - Content */}
             <div className="md:w-1/2 text-center md:text-left">
-              <h3 className="text-2xl font-bold text-orange-500 mb-3">Cafés & Community Spaces</h3>
-              <p className="text-gray-700">Transform casual spaces into hubs of connection. Whether you're attending a conference, managing a school club, or setting up a café community — Lookiy makes networking seamless, smart, and personal.</p>
+              <h3 className="text-2xl font-bold text-orange-500 mb-3">Business & Enterprise Spaces</h3>
+              <p className="text-gray-700">Transform business spaces into hubs of connection. Whether you're a small or big enterprise, Lookiy makes networking and business workflows seamless , smart, and personal.</p>
             </div>
           </motion.div>
         </div>
