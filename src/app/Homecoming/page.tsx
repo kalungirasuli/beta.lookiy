@@ -36,7 +36,7 @@ export default function Homecoming() {
       'social connection',
       'world connection'
     ],
-    ogImage: 'https://lookiy.net/og-image.png',
+    ogImage: 'https://lookiy.net/logomin.png',
     ogUrl: 'https://lookiy.net',
     twitterHandle: '@LookiyApp',
     authorName: 'Lookiy Team',

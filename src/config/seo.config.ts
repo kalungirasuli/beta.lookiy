@@ -9,9 +9,9 @@ export const SITE_CONFIG = {
   twitterHandle: '@LookiyApp',
   email: 'support@lookiy.net',
   phone: '+256 704616280',
-  logo: 'https://lookiy.net/logo.png',
+  logo: 'https://lookiy.net/logo.svg',
   favicon: '/logomin.svg',
-  ogImage: 'https://lookiy.net/og-image.png',
+  ogImage: 'https://lookiy.net/logomin.png',
 };
 
 export const KEYWORDS = [
@@ -219,7 +219,7 @@ export const SEO_PAGES = {
 export const SOCIAL_MEDIA_PREVIEW = {
   title: 'Lookiy - The Way to Africa and World\'s Next Generation of Social Communication',
   description: 'Lookiy is the way to Africa and the world\'s next generation of social communication in the digital space. Making lives easier than ever.',
-  image: 'https://lookiy.net/og-image.png',
+  image: 'https://lookiy.net/logomin.png',
   url: 'https://lookiy.net',
   type: 'website',
 };
