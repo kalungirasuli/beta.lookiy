@@ -171,7 +171,7 @@ export default function JoinWaitingListForm() {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                  className="w-full px-4 text-gray-800 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
                   placeholder="Enter your full name"
                   required
                 />
@@ -184,7 +184,7 @@ export default function JoinWaitingListForm() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                  className="w-full text-gray-800 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
                   placeholder="you@example.com"
                   required
                 />
@@ -196,7 +196,7 @@ export default function JoinWaitingListForm() {
                   id="type"
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all bg-white"
+                  className="w-full text-gray-800 px-4 text-gray-800 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all bg-white"
                   required
                 >
                   <option value="Individual">Individual</option>
@@ -214,7 +214,7 @@ export default function JoinWaitingListForm() {
                       id="companyName"
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                      className="w-full px-4 text-gray-800 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
                       placeholder="Enter your company name"
                       required={type === 'Company/Organization'}
                     />
@@ -226,7 +226,7 @@ export default function JoinWaitingListForm() {
                       id="companyDescription"
                       value={companyDescription}
                       onChange={(e) => setCompanyDescription(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all resize-none"
+                      className="w-full px-4 py-3 text-gray-800 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all resize-none"
                       placeholder="Tell us about your company"
                       rows={4}
                       required={type === 'Company/Organization'}
