@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lookiy — Countdown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #111317;
+    --flip-w: clamp(88px, 10.5vw, 196px);
+    --flip-h: clamp(100px, 12vw, 220px);
+    --flip-r: clamp(12px, 1.4vw, 20px);
+    --flip-fs: clamp(54px, 7.8vw, 124px);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: var(--ink);
+  }
+
+  /* Background image with light overlay */
+  .bg {
+    position: fixed; inset: 0; z-index: -1;
+    background: url('images/app-ready.jpg') center / cover no-repeat;
+  }
+  .bg::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(7, 11, 19, .80), rgba(7, 11, 19, .94));
+  }
+
+  .stage {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: clamp(36px, 6vh, 72px);
+    padding: 48px 24px;
+  }
+
+  .logo { height: clamp(64px, 10vw, 148px); width: auto; filter: brightness(0) invert(1) drop-shadow(0 6px 18px rgba(0, 0, 0, .35)); }
+
+  .countdown { display: flex; flex-direction: column; align-items: center; gap: clamp(22px, 4vh, 40px); }
+
+  .flip-row { display: flex; justify-content: center; gap: clamp(12px, 2vw, 26px); flex-wrap: wrap; }
+  .unit { display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 1.6vh, 16px); }
+  .label {
+    font-size: clamp(11px, 1.3vw, 14px);
+    letter-spacing: .18em; text-transform: lowercase;
+    font-weight: 700; color: rgba(255, 255, 255, .62);
+  }
+
+  /* ---- Flip card (white, realistic) ---- */
+  .flip {
+    position: relative; width: var(--flip-w); height: var(--flip-h);
+    perspective: 800px;
+    border-radius: var(--flip-r);
+    box-shadow: 0 20px 38px rgba(17, 19, 23, .20);
+  }
+  .face { position: absolute; left: 0; width: 100%; height: 50%; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .face span {
+    display: block; height: var(--flip-h); line-height: var(--flip-h);
+    text-align: center; font-size: var(--flip-fs); font-weight: 800;
+    font-variant-numeric: tabular-nums; letter-spacing: -.02em; color: var(--ink);
+  }
+  .face.top, .face.top-flap {
+    top: 0; border-radius: var(--flip-r) var(--flip-r) 0 0;
+    background: linear-gradient(#ffffff 0%, #f2f3f6 100%);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .08);
+  }
+  .face.bottom, .face.bottom-flap {
+    top: 50%; border-radius: 0 0 var(--flip-r) var(--flip-r);
+    background: linear-gradient(#eceef2 0%, #ffffff 100%);
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, .08);
+  }
+  .face.bottom span, .face.bottom-flap span { transform: translateY(-50%); }
+
+  .face.top { z-index: 2; }
+  .face.bottom { z-index: 1; }
+  .face.top-flap { z-index: 4; transform-origin: bottom; transform: rotateX(-90deg); }
+  .face.bottom-flap { z-index: 3; transform-origin: top; transform: rotateX(90deg); }
+  .face.top-flap.anim { animation: foldTop .3s ease-in forwards; }
+  .face.bottom-flap.anim { animation: foldBottom .3s ease-out .3s forwards; }
+  @keyframes foldTop { from { transform: rotateX(0); } to { transform: rotateX(-90deg); } }
+  @keyframes foldBottom { from { transform: rotateX(90deg); } to { transform: rotateX(0); } }
+
+  /* Seam across the fold line */
+  .seam {
+    position: absolute; left: 12px; right: 12px; top: 50%; height: 2px;
+    background: #d5dae1; transform: translateY(-1px); z-index: 6;
+    border-radius: 2px; box-shadow: 0 1px 0 rgba(0, 0, 0, .06);
+  }
+  /* Transparent semi-circle hinge cutouts at the flip axis */
+  .hinge {
+    position: absolute; top: 50%; width: clamp(10px, 1.2vw, 16px); height: clamp(20px, 2.4vw, 34px); z-index: 7;
+    background: transparent;
+  }
+  .hinge.left { left: calc(clamp(10px, 1.2vw, 16px) / -2); border-radius: 0 50% 50% 0; transform: translateY(-50%); }
+  .hinge.right { right: calc(clamp(10px, 1.2vw, 16px) / -2); border-radius: 50% 0 0 50%; transform: translateY(-50%); }
+
+  .caption {
+    margin: 0; font-size: clamp(14px, 1.6vw, 18px); letter-spacing: .04em;
+    color: rgba(255, 255, 255, .90); font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <main class="stage">
+    <img class="logo" src="images/lookiy-icon-2.png" alt="Lookiy" />
+
+    <div class="countdown">
+      <div class="flip-row">
+        <div class="unit">
+          <div class="flip" data-unit="days">
+            <div class="face top"><span>00</span></div>
+            <div class="face bottom"><span>00</span></div>
+            <div class="face top-flap"><span>00</span></div>
+            <div class="face bottom-flap"><span>00</span></div>
+            <i class="hinge left"></i><i class="hinge right"></i><i class="seam"></i>
+          </div>
+          <div class="label">days</div>
+        </div>
+        <div class="unit">
+          <div class="flip" data-unit="hours">
+            <div class="face top"><span>00</span></div>
+            <div class="face bottom"><span>00</span></div>
+            <div class="face top-flap"><span>00</span></div>
+            <div class="face bottom-flap"><span>00</span></div>
+            <i class="hinge left"></i><i class="hinge right"></i><i class="seam"></i>
+          </div>
+          <div class="label">hours</div>
+        </div>
+        <div class="unit">
+          <div class="flip" data-unit="minutes">
+            <div class="face top"><span>00</span></div>
+            <div class="face bottom"><span>00</span></div>
+            <div class="face top-flap"><span>00</span></div>
+            <div class="face bottom-flap"><span>00</span></div>
+            <i class="hinge left"></i><i class="hinge right"></i><i class="seam"></i>
+          </div>
+          <div class="label">mins</div>
+        </div>
+        <div class="unit">
+          <div class="flip" data-unit="seconds">
+            <div class="face top"><span>00</span></div>
+            <div class="face bottom"><span>00</span></div>
+            <div class="face top-flap"><span>00</span></div>
+            <div class="face bottom-flap"><span>00</span></div>
+            <i class="hinge left"></i><i class="hinge right"></i><i class="seam"></i>
+          </div>
+          <div class="label">sec</div>
+        </div>
+      </div>
+
+      <p class="caption">Just days to the revolution</p>
+    </div>
+  </main>
+
+  <script>
+    var TARGET = new Date(2026, 9, 31, 20, 33, 0).getTime();
+
+    var units = ['days', 'hours', 'minutes', 'seconds'];
+    var state = { days: -1, hours: -1, minutes: -1, seconds: -1 };
+    var pad = function (n, len) { return String(n).padStart(len, '0'); };
+
+    function flip(card, key, value) {
+      var oldStr = pad(Math.max(state[key], 0), 2);
+      var newStr = pad(value, 2);
+      if (newStr === oldStr) return;
+
+      var top = card.querySelector('.face.top span');
+      var bottom = card.querySelector('.face.bottom span');
+      var topFlap = card.querySelector('.face.top-flap');
+      var bottomFlap = card.querySelector('.face.bottom-flap');
+
+      topFlap.querySelector('span').textContent = oldStr;
+      bottomFlap.querySelector('span').textContent = newStr;
+
+      topFlap.classList.remove('anim');
+      bottomFlap.classList.remove('anim');
+      void topFlap.offsetWidth;
+      void bottomFlap.offsetWidth;
+
+      topFlap.classList.add('anim');
+      bottomFlap.classList.add('anim');
+
+      setTimeout(function () { top.textContent = newStr; }, 300);
+      setTimeout(function () {
+        bottom.textContent = newStr;
+        topFlap.classList.remove('anim');
+        bottomFlap.classList.remove('anim');
+      }, 600);
+
+      state[key] = value;
+    }
+
+    function tick() {
+      var diff = Math.max(TARGET - Date.now(), 0);
+      var map = {
+        days: Math.floor(diff / 86400000),
+        hours: Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        seconds: Math.floor((diff % 60000) / 1000)
+      };
+      units.forEach(function (key) {
+        flip(document.querySelector('.flip[data-unit="' + key + '"]'), key, map[key]);
+      });
+    }
+
+    (function seed() {
+      var diff = Math.max(TARGET - Date.now(), 0);
+      var init = {
+        days: Math.floor(diff / 86400000),
+        hours: Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        seconds: Math.floor((diff % 60000) / 1000)
+      };
+      units.forEach(function (key) {
+        var card = document.querySelector('.flip[data-unit="' + key + '"]');
+        var s = pad(init[key], 2);
+        card.querySelector('.face.top span').textContent = s;
+        card.querySelector('.face.bottom span').textContent = s;
+        state[key] = init[key];
+      });
+    })();
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
