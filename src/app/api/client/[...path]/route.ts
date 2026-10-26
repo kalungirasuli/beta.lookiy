@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { ACCESS_COOKIE, REFRESH_COOKIE, jsonReply, sameOriginMutation, withSession } from '@/lib/server-api';
+import { ACCESS_COOKIE, REFRESH_COOKIE, gateway, jsonReply, sameOriginMutation, withSession } from '@/lib/server-api';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,6 +19,11 @@ async function dispatch(req: NextRequest, path: string[], method: 'GET' | 'POST'
   if (method === 'POST' && !sameOriginMutation(req)) return jsonReply(403, { message: 'Cross-site requests are not allowed.' });
   const joined = path.join('/');
   if (!allowed(method, joined)) return jsonReply(404, { message: 'This feature is available in the mobile app.' });
+  if (method === 'GET' && joined === 'geo/search') {
+    const params = new URLSearchParams({ q: req.nextUrl.searchParams.get('q') || '', limit: '5' });
+    const result = await gateway(`/geo/public/search?${params}`);
+    return jsonReply(result.status, result.body);
+  }
   const query = req.nextUrl.search;
   const init: RequestInit = { method };
   if (method === 'POST') init.body = await req.text();

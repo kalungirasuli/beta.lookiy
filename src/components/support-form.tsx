@@ -46,7 +46,7 @@ export function SupportForm({ initialTopic }: { initialTopic: string }) {
     <div className="form-field"><label htmlFor="support-message">Your message</label><textarea id="support-message" className="text-field support-message" value={message} onChange={event => setMessage(event.target.value)} minLength={15} maxLength={4000} placeholder="Tell us what happened or what you would like to know." required /></div>
     <div className="support-honeypot" aria-hidden="true"><label htmlFor="support-website">Website</label><input id="support-website" tabIndex={-1} autoComplete="off" value={website} onChange={event => setWebsite(event.target.value)} /></div>
     {error && <div className="form-error" role="alert">{error}</div>}
-    <p className="form-hint">We use these details only to respond to your request. See our <a href="/privacy">privacy policy</a>.</p>
+    <p className="form-hint">We use these details only to respond to your request. See our <a href="/privacy">privacy policy page</a>.</p>
     <button type="submit" className="primary-button" disabled={busy}>{busy ? 'Sending…' : 'Send message'} <ArrowRight size={18} /></button>
   </form>;
 }

@@ -41,6 +41,8 @@ function RideForm() {
         if (Date.now() - Number(saved.createdAt || 0) < 20 * 60 * 1000) {
           if (saved.pickup) { setPickup(saved.pickup); setPickupText(saved.pickup.address || 'Current location'); }
           if (saved.destination) { setDestination(saved.destination); setDestinationText(saved.destination.address || 'Destination'); }
+          if (!saved.pickup && typeof saved.pickupText === 'string') setPickupText(saved.pickupText);
+          if (!saved.destination && typeof saved.destinationText === 'string') setDestinationText(saved.destinationText);
         } else sessionStorage.removeItem('lookiy-web-ride-draft');
       }
     } catch { /* Ignore an expired browser draft. */ }
