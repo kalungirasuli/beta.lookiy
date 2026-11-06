@@ -1,15 +1,18 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpRight } from 'lucide-react';
 
 export function SiteFooter() {
   return <footer className="site-footer">
-    <div className="footer-main content-width">
-      <div><Link href="/" className="brand-crop footer-brand" aria-label="Lookiy home"><Image className="brand-image" src="/images/lookiy-icon-1.png" alt="Lookiy" width={452} height={156} /></Link><p>Where Uganda moves together.</p></div>
-      <div><strong>Explore</strong><Link href="/ride">Book a journey</Link><Link href="/journeys">Your journeys</Link><Link href="/get-app">Get the app</Link></div>
-      <div><strong>Company</strong><Link href="/about">About Lookiy</Link><Link href="/investors">Investors</Link><Link href="/riders">Rider&apos;s guide</Link><Link href="/riders/benefits">Rider benefits</Link><Link href="/app">For business <ArrowUpRight size={13} /></Link><Link href="/support">Support</Link></div>
-      <div><strong>Legal</strong><Link href="/terms">Terms and conditions</Link><Link href="/privacy">Privacy policy</Link></div>
+    <div className="footer-intro content-width">
+      <Link href="/" className="brand-crop footer-brand" aria-label="Lookiy home"><Image className="brand-image" src="/images/lookiy-icon-1.png" alt="Lookiy" width={452} height={156} /></Link>
+      <Link href="/support">Visit the help centre</Link>
     </div>
-    <div className="footer-bottom content-width"><span>© {new Date().getFullYear()} Lookiy</span><span><Link href="/terms">Terms</Link> · <Link href="/privacy">Privacy</Link></span></div>
+    <nav className="footer-directory content-width" aria-label="Footer navigation">
+      <div><h2>Company</h2><Link href="/about">About us</Link><Link href="/investors">Investors</Link><Link href="/support">Support</Link></div>
+      <div><h2>Products</h2><Link href="/ride">Ride</Link><Link href="/ride?purpose=delivery">Delivery</Link><Link href="/app">Lookiy for business</Link></div>
+      <div><h2>Earn</h2><Link href="/riders">Become a rider</Link><Link href="/riders/benefits">Rider benefits</Link></div>
+      <div><h2>Travel</h2><Link href="/journeys">Your journeys</Link><Link href="/get-app">Get the app</Link></div>
+    </nav>
+    <div className="footer-bottom content-width"><span>© {new Date().getFullYear()} Lookiy</span><div><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div></div>
   </footer>;
 }

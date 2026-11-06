@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useState, type KeyboardEvent } from 'react';
+import { useEffect, useId, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { Circle, MapPin, Square } from 'lucide-react';
 import { api, type Place, type Point } from '@/lib/client-api';
 
@@ -12,10 +12,13 @@ type Props = {
   onSelect: (place: Point) => void;
   placeholder: string;
   kind: 'pickup' | 'destination';
+  fieldId?: string;
+  action?: ReactNode;
 };
 
-export function PlaceField({ label, value, selected, onChange, onSelect, placeholder, kind }: Props) {
-  const id = useId();
+export function PlaceField({ label, value, selected, onChange, onSelect, placeholder, kind, fieldId, action }: Props) {
+  const generatedId = useId();
+  const id = fieldId || generatedId;
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const [revision, setRevision] = useState(0);
@@ -80,6 +83,7 @@ export function PlaceField({ label, value, selected, onChange, onSelect, placeho
         autoComplete="off" placeholder={placeholder} value={value}
         onFocus={() => { setOpen(true); setResult(undefined); }} onClick={() => setOpen(true)}
         onChange={event => { onChange(event.target.value); setActive(-1); setOpen(true); setResult(undefined); }} onKeyDown={handleKey} />
+      {action}
     </div>
     {expanded && <div className="place-popup">
       <div className="place-options" id={`${id}-options`} role="listbox" aria-label={`${label} suggestions`}>
