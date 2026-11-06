@@ -5,8 +5,8 @@ import { HeroSearch } from '@/components/hero-search';
 
 export default function HomePage() {
   return <>
-    <section className="hero content-width">
-      <div className="hero-copy"><span className="eyebrow">MOVEMENT MADE PERSONAL</span><h1>Go anywhere,<br />together.</h1><p>One place to plan your next ride, delivery, or journey across Uganda.</p><HeroSearch /><span className="hero-footnote">Already travelling? <Link href="/journeys">View your journeys <ArrowRight size={14} /></Link></span></div>
+    <section className="hero booking-hero content-width">
+      <div className="hero-copy"><h1>Get a ride with Lookiy</h1><p>Enter your pickup and dropoff to plan a ride or delivery in Uganda.</p><HeroSearch /><span className="hero-footnote">Already travelling? <Link href="/journeys">View your journeys <ArrowRight size={14} /></Link></span></div>
       <div className="hero-image"><Image src="/images/passenger.jpg" alt="Illustration of a passenger travelling by car" fill priority sizes="(max-width: 800px) 100vw, 48vw" /><div className="hero-image-badge"><span className="badge-icon"><Route size={18} /></span><span><strong>Where to next?</strong><small>Your journey starts here.</small></span></div></div>
     </section>
 

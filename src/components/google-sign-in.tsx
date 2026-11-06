@@ -19,7 +19,7 @@ function loadIdentity(): Promise<Identity> {
   });
   return library;
 }
-export function GoogleSignIn({ deviceSignature, onResult, onBusy, disabled }: { deviceSignature: () => string; onResult: (result: LoginResult) => void; onBusy: (busy: boolean) => void; disabled: boolean }) {
+export function GoogleSignIn({ deviceSignature, onResult, onBusy, disabled }: { deviceSignature: () => string; onResult: (result: LoginResult) => Promise<void>; onBusy: (busy: boolean) => void; disabled: boolean }) {
   const target = useRef<HTMLDivElement>(null), running = useRef(false);
   const callbacks = useRef({ deviceSignature, onResult, onBusy, disabled }); callbacks.current = { deviceSignature, onResult, onBusy, disabled };
   const [error, setError] = useState(''), [revision, setRevision] = useState(0), [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ export function GoogleSignIn({ deviceSignature, onResult, onBusy, disabled }: { 
       identity.initialize({ client_id: config.clientId, auto_select: false, callback: async response => {
         if (!active || !response.credential || running.current || callbacks.current.disabled) return;
         running.current = true; callbacks.current.onBusy(true); setError('');
-        try { const result = await api<LoginResult>('/api/session/google', { method: 'POST', body: JSON.stringify({ idToken: response.credential, deviceSignature: callbacks.current.deviceSignature() }), signal: controller.signal }); if (active) callbacks.current.onResult(result); }
+        try { const result = await api<LoginResult>('/api/session/google', { method: 'POST', body: JSON.stringify({ idToken: response.credential, deviceSignature: callbacks.current.deviceSignature() }), signal: controller.signal }); if (active) await callbacks.current.onResult(result); }
         catch (e) { if (active) setError(e instanceof Error ? e.message : 'Google sign-in failed. Please retry.'); }
         finally { running.current = false; if (active) callbacks.current.onBusy(false); }
       } });

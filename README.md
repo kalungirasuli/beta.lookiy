@@ -8,11 +8,23 @@ This is the separate public website and client booking experience. It uses the L
 2. Copy `.env.example` to `.env.local` in this directory and fill in the values you use.
 3. Run `npm ci` and `npm run dev` in this directory. The site opens at `http://localhost:3200`.
 
-`API_GATEWAY_URL` is server-only. Browser requests go to this Next.js app, which forwards a small allowlist of client endpoints to the gateway. Access and refresh tokens are stored as HTTP-only, same-site cookies. The app automatically refreshes an expired access token once and clears the cookies when the session is rejected. Production HTTPS enables secure cookies.
+Browser requests go to this Next.js app, which forwards a small allowlist of endpoints to the gateway. Session tokens and the device signature are stored as HTTP-only, same-site cookies. The server forwards the signature to auth-service when verifying the session. Production HTTPS enables secure cookies. Sessions created before the signature cookie was introduced require one fresh sign-in.
 
 `GOOGLE_WEB_CLIENT_ID` enables the official Google Identity Services sign-in button. Use the Web application client ID accepted by auth-service's `GOOGLE_WEB_CLIENT_ID`, and add the exact website origin to its authorized JavaScript origins in Google Cloud. This public identifier is returned by `/api/session/google-config`; no OAuth client secret is used. Existing accounts with 2FA still complete the authenticator step, and inactive accounts are rejected. Email/phone login remains available if Google is unconfigured or unavailable.
 
-`NEXT_PUBLIC_GOOGLE_MAPS_KEY` enables the signed-in interactive route map. Restrict it by this website's origin and enable Maps JavaScript API. Website place search is public through a bounded, rate-limited `/geo/public/search` gateway endpoint; all other geo and booking routes retain authentication. The geo service needs its own `GOOGLE_MAPS_API_KEY` for place search and driving routes. `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` is optional for standard markers. Configure `NEXT_PUBLIC_APP_STORE_URL` and `NEXT_PUBLIC_PLAY_STORE_URL` when the mobile store listings are published.
+## Vercel environment variables
+
+| Name | Vercel type | Value |
+| --- | --- | --- |
+| `API_GATEWAY_URL` | Config | Required. HTTPS base origin of the Lookiy API gateway. |
+| `SITE_URL` | Config | Production web-client origin for canonical page metadata. |
+| `GOOGLE_WEB_CLIENT_ID` | Config | Required for Google sign-in. Use the Web OAuth client ID also allowed by auth-service. |
+| `GOOGLE_MAPS_KEY` | Secret | Required for the interactive map. Use a dedicated key restricted to Maps JavaScript API and the exact web-client referrer. |
+| `GOOGLE_MAPS_MAP_ID` | Config | Optional Google Cloud Map ID. Leave blank for the default map. |
+| `APP_STORE_URL` | Config | Optional published Apple App Store listing URL. |
+| `PLAY_STORE_URL` | Config | Optional published Google Play listing URL. |
+
+Use these names as written. No `NEXT_PUBLIC_` variables are required. `/api/maps/config` verifies the current web session before returning the website-restricted browser key at runtime. The browser can inspect that key in its map requests. The backend `GOOGLE_MAPS_API_KEY` belongs only to geo-service, which handles public search and authenticated route previews. Web search uses Geocoding API and route previews use Routes API. Register each allowed web-client origin separately in Google Cloud for Maps referrers and the Web OAuth client's JavaScript origins.
 
 ## Scope
 

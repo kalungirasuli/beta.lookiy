@@ -14,8 +14,8 @@ export function GET(request: NextRequest) {
   const agent = request.headers.get('user-agent') || '';
   const apple = /iPhone|iPad|iPod|Macintosh|Mac OS X/i.test(agent);
   const android = /Android/i.test(agent);
-  const appStore = storeUrl(process.env.NEXT_PUBLIC_APP_STORE_URL, 'apps.apple.com');
-  const playStore = storeUrl(process.env.NEXT_PUBLIC_PLAY_STORE_URL, 'play.google.com');
+  const appStore = storeUrl((process.env.APP_STORE_URL || process.env.NEXT_PUBLIC_APP_STORE_URL), 'apps.apple.com');
+  const playStore = storeUrl((process.env.PLAY_STORE_URL || process.env.NEXT_PUBLIC_PLAY_STORE_URL), 'play.google.com');
   const target = android ? playStore : apple ? appStore : null;
 
   if (target) return NextResponse.redirect(target, { status: 307, headers: { 'Cache-Control': 'no-store' } });

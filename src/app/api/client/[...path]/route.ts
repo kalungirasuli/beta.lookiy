@@ -1,11 +1,11 @@
 import { NextRequest } from 'next/server';
-import { ACCESS_COOKIE, REFRESH_COOKIE, gateway, jsonReply, sameOriginMutation, withSession } from '@/lib/server-api';
+import { gateway, jsonReply, sameOriginMutation, withSession } from '@/lib/server-api';
 
 export const dynamic = 'force-dynamic';
 
 function allowed(method: string, path: string) {
   if (method === 'GET') return [
-    /^geo\/search$/, /^journeys\/my\/(active|history)$/, /^journeys\/[a-f\d]{24}$/i,
+    /^geo\/search$/, /^operators\/vehicle-availability$/, /^journeys\/my\/(active|history)$/, /^journeys\/[a-f\d]{24}$/i,
     /^tracking\/journey\/[a-f\d]{24}$/i, /^chat\/rooms\/[a-f\d]{24}\/messages$/i,
   ].some(pattern => pattern.test(path));
   if (method === 'POST') return [
@@ -27,7 +27,7 @@ async function dispatch(req: NextRequest, path: string[], method: 'GET' | 'POST'
   const query = req.nextUrl.search;
   const init: RequestInit = { method };
   if (method === 'POST') init.body = await req.text();
-  return withSession(`/${joined}${query}`, init, req.cookies.get(ACCESS_COOKIE)?.value, req.cookies.get(REFRESH_COOKIE)?.value);
+  return withSession(req, `/${joined}${query}`, init);
 }
 
 export async function GET(req: NextRequest, context: { params: Promise<{ path: string[] }> }) {

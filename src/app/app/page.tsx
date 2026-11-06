@@ -7,8 +7,8 @@ import { StoreLinks } from '@/components/store-links';
 export const metadata: Metadata = { title: 'For business — Lookiy' };
 
 export default function AppPage() {
-  const appStore = process.env.NEXT_PUBLIC_APP_STORE_URL;
-  const playStore = process.env.NEXT_PUBLIC_PLAY_STORE_URL;
+  const appStore = (process.env.APP_STORE_URL || process.env.NEXT_PUBLIC_APP_STORE_URL);
+  const playStore = (process.env.PLAY_STORE_URL || process.env.NEXT_PUBLIC_PLAY_STORE_URL);
   return <>
     <section className="inner-hero content-width split-hero">
       <div>
