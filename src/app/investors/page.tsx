@@ -14,7 +14,7 @@ export default function InvestorsPage() {
         <p>Lookiy brings journeys, local businesses, and fleets into one marketplace. We are building a business around the trips people take every day and the places they pass along the way.</p>
         <Link href="/support?topic=investor" className="primary-button inline-button">Start a conversation <ArrowRight size={18} /></Link>
       </div>
-      <div className="inner-visual"><Image src="/images/traffic.jpg" fill alt="Traffic moving through Uganda" sizes="(max-width: 800px) 100vw, 45vw" /></div>
+      <div className="inner-visual"><Image src="/images/traffic.jpg" fill alt="Traffic moving through Uganda" sizes="(max-width: 800px) 100vw, 45vw" priority /></div>
     </section>
 
     <section className="investor-strip content-width">
@@ -42,7 +42,7 @@ export default function InvestorsPage() {
     </section>
 
     <section className="content-width">
-      <div className="section-heading" style={{ marginTop: 90 }}><span className="eyebrow">THE CUSTOMER EXPERIENCE</span><h2>Useful at each point in the journey.</h2></div>
+      <div className="section-heading"><span className="eyebrow">THE CUSTOMER EXPERIENCE</span><h2>Useful at each point in the journey.</h2></div>
       <div className="visual-grid">
         <figure><Image src="/images/discovery.jpg" fill alt="Discovering local businesses along a journey" /><figcaption>Discover a place nearby</figcaption></figure>
         <figure><Image src="/images/safety.jpg" fill alt="Lookiy safety and verification" /><figcaption>Travel with confidence</figcaption></figure>

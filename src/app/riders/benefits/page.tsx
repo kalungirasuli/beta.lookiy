@@ -35,6 +35,7 @@ export default function RiderBenefitsPage() {
         <span className="eyebrow">THE ECONOMICS</span>
         <h2>Commission vs. subscription.</h2>
         <p>The difference is structural. Percentage commissions punish busy operators — the more you earn, the more you lose. A flat weekly fee means your effort translates directly into income.</p>
+        <div className="table-scroll" role="region" aria-label="Rider earnings comparison" tabIndex={0}>
         <table className="compare-table">
           <thead><tr><th>What you keep</th><th>Lookiy</th><th>Typical platforms</th></tr></thead>
           <tbody>
@@ -45,6 +46,7 @@ export default function RiderBenefitsPage() {
             <tr><td>On a UGX 500,000 week</td><td className="highlight">UGX 495,000 kept</td><td>UGX 375,000–425,000 kept</td></tr>
           </tbody>
         </table>
+        </div>
         <p style={{ marginTop: 22, color: '#5d6571' }}>On a UGX 500,000 week, a typical 20% commission would take UGX 100,000. Lookiy&apos;s flat fee keeps that money in your wallet.</p>
       </div>
     </section>

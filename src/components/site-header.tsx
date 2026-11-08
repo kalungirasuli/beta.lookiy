@@ -24,14 +24,14 @@ export function SiteHeader() {
       <Link className="brand-crop" href="/" aria-label="Lookiy home"><Image className="brand-image" src="/images/lookiy-icon-1.png" alt="Lookiy" width={452} height={156} priority /></Link>
       <nav id="main-navigation" className={menu ? 'nav-links open' : 'nav-links'} aria-label="Main navigation">
         <Link href="/ride" onClick={() => setMenu(false)}>Ride</Link>
-        <Link href="/riders" onClick={() => setMenu(false)}>Drive</Link>
+        <Link href="/riders" aria-current={pathname.startsWith('/riders') ? 'location' : undefined} onClick={() => setMenu(false)}>Drive</Link>
         <Link href="/ride?purpose=delivery" onClick={() => setMenu(false)}>Delivery</Link>
-        <Link href="/app" onClick={() => setMenu(false)}>Business</Link>
-        <Link href="/about" onClick={() => setMenu(false)}>About</Link>
-        <Link href="/support" className="nav-menu-help" onClick={() => setMenu(false)}>Help</Link>
+        <Link href="/app" aria-current={pathname === '/app' ? 'page' : undefined} onClick={() => setMenu(false)}>Business</Link>
+        <Link href="/about" aria-current={pathname === '/about' ? 'page' : undefined} onClick={() => setMenu(false)}>About</Link>
+        <Link href="/support" aria-current={pathname === '/support' ? 'page' : undefined} className="nav-menu-help" onClick={() => setMenu(false)}>Help</Link>
       </nav>
       <div className="nav-actions">
-        <Link href="/support" className="nav-text-link nav-desktop-help" onClick={() => setMenu(false)}>Help</Link>
+        <Link href="/support" aria-current={pathname === '/support' ? 'page' : undefined} className="nav-text-link nav-desktop-help" onClick={() => setMenu(false)}>Help</Link>
         <Link href={signedIn ? '/journeys' : '/login'} className="nav-text-link" onClick={() => setMenu(false)}>{signedIn ? 'Your journeys' : 'Log in'}</Link>
         <Link href={signedIn ? '/ride' : '/register'} className={signedIn ? 'pill-button nav-cta nav-cta-book' : 'pill-button nav-cta'} onClick={() => setMenu(false)}>{signedIn ? 'Book a ride' : 'Sign up'}</Link>
         <button ref={menuButton} type="button" className="menu-toggle" aria-expanded={menu} aria-controls="main-navigation" onClick={() => setMenu(!menu)} aria-label={menu ? 'Close navigation' : 'Open navigation'}>{menu ? <X size={23} /> : <Menu size={23} />}</button>

@@ -17,7 +17,7 @@ export default function AppPage() {
         <p>People pass great local businesses every day without knowing what is inside. Lookiy helps nearby travellers discover your shop, see what you offer, and choose to visit while they are already on the move.</p>
         <StoreLinks appStoreUrl={appStore} playStoreUrl={playStore} />
       </div>
-      <div className="inner-visual business-visual"><Image src="/images/discovery.jpg" fill alt="A neighbourhood business along a traveller's route" sizes="(max-width: 800px) 100vw, 45vw" /></div>
+      <div className="inner-visual business-visual"><Image src="/images/discovery.jpg" fill alt="A neighbourhood business along a traveller's route" sizes="(max-width: 800px) 100vw, 45vw" priority /></div>
     </section>
 
     <section className="editorial-section">
@@ -29,7 +29,7 @@ export default function AppPage() {
     </section>
 
     <section className="content-width">
-      <div className="section-heading" style={{ marginTop: 88 }}><span className="eyebrow">WHAT YOU CAN DO</span><h2>One place to grow your local presence.</h2></div>
+      <div className="section-heading"><span className="eyebrow">WHAT YOU CAN DO</span><h2>One place to grow your local presence.</h2></div>
       <div className="info-grid">
       <article><Store size={26} /><h2>A storefront people can trust</h2><p>Show your location, cover photo, opening details, and the products that make your business worth a visit.</p></article>
       <article><Megaphone size={26} /><h2>Promote what matters now</h2><p>Feature a product or campaign for people moving nearby, with a budget you can control.</p></article>
@@ -56,7 +56,7 @@ export default function AppPage() {
     </section>
 
     <section className="content-width">
-      <div className="section-heading" style={{ marginTop: 90 }}><span className="eyebrow">IN YOUR POCKET</span><h2>Everything in the app.</h2></div>
+      <div className="section-heading"><span className="eyebrow">IN YOUR POCKET</span><h2>Everything in the app.</h2></div>
       <div className="visual-grid">
         <figure><Image src="/images/app-create.jpg" fill alt="Create a Lookiy account in the app" /><figcaption>Create your account</figcaption></figure>
         <figure><Image src="/images/app-signin.jpg" fill alt="Sign in to Lookiy securely" /><figcaption>Sign in securely</figcaption></figure>

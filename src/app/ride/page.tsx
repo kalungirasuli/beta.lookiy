@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { browserLocation } from '@/lib/current-location';
@@ -163,10 +164,16 @@ function RideForm() {
   if (session === 'loading') return <div className="workspace"><div className="content-width loading">Opening journey planner…</div></div>;
   if (session !== 'signed') {
     const search = query.toString();
-    return <section className="content-width guest-planner">
-      <h1>Get a ride</h1>
-      <p>Search for your pickup and dropoff. Sign in when you’re ready to plan.</p>
-      <HeroSearch next={search ? `/ride?${search}` : '/ride'} initialPickup={pickupText} initialDestination={destinationText} />
+    return <section className="inner-hero content-width split-hero">
+      <div>
+        <span className="eyebrow">PLAN WITH LOOKIY</span>
+        <h1>{query.get('purpose') === 'delivery' ? 'Send a delivery' : 'Get a ride'}</h1>
+        <p>Search for your pickup and dropoff. Sign in when you’re ready to plan.</p>
+        <HeroSearch next={search ? `/ride?${search}` : '/ride'} initialPickup={pickupText} initialDestination={destinationText} />
+      </div>
+      <div className="inner-visual">
+        <Image src="/images/ride.jpg" fill alt="" sizes="(max-width: 800px) 100vw, 45vw" priority />
+      </div>
     </section>;
   }
   return <div className="workspace booking-workspace"><div className="content-width">
@@ -174,10 +181,10 @@ function RideForm() {
     <form className="booking-layout" aria-busy={busy || routing} onSubmit={event => { event.preventDefault(); void submit(); }}>
     <section className="workspace-card form-stack booking-places" aria-label="Pickup and dropoff">
     <div className="place-pair">
-      <PlaceField kind="pickup" label="Pickup location" value={pickupText} selected={pickup} placeholder="Where should we pick you up?" onChange={value => { cancelLocation(); setPickupText(value); setPickup(null); }} onSelect={point => { cancelLocation(); setPickup(point); setPickupText(point.address || 'Pickup'); }}/>
+      <PlaceField kind="pickup" label="Pickup location" value={pickupText} selected={pickup} placeholder="Enter pickup location" onChange={value => { cancelLocation(); setPickupText(value); setPickup(null); }} onSelect={point => { cancelLocation(); setPickup(point); setPickupText(point.address || 'Pickup'); }}/>
       <PlaceField kind="destination" label="Dropoff location" value={destinationText} selected={destination} placeholder="Where are you going?" onChange={value => { setDestinationText(value); setDestination(null); }} onSelect={point => { setDestination(point); setDestinationText(point.address || 'Destination'); }}/>
     </div>
-    <button type="button" className="secondary-button" onClick={locate} disabled={locating} style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}><LocateFixed size={17} color="#1769e8"/> {locating ? 'Finding an accurate location…' : 'Use current location'}</button>
+    <button type="button" className="secondary-button" onClick={locate} disabled={locating}><LocateFixed size={17} aria-hidden /> {locating ? 'Finding an accurate location…' : 'Use current location'}</button>
     {pickup?.source === 'gps' && <p className="form-hint">GPS accuracy: about {Math.round(pickup.accuracy || 0)} m. Check your side of the road; drag the pickup pin to adjust it.</p>}
     {pickup?.source === 'gps' && (pickup.accuracy ?? Infinity) > 30 && !confirmed && <button type="button" className="secondary-button" onClick={() => setConfirmed(true)}>Confirm this approximate pickup pin</button>}
     </section>

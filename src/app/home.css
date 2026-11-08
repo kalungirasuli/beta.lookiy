@@ -1,10 +1,6 @@
 .home-page {
-  background: #000;
-  color: #fff;
-}
-.home-content {
-  width: min(1152px, calc(100% - 48px));
-  margin-inline: auto;
+  background: var(--paper);
+  color: var(--ink);
 }
 .home-hero {
   display: grid;
@@ -35,9 +31,7 @@
 .home-region a:hover, .home-booking-actions > a:hover { color: #d0d0d0; }
 .home-hero h1 {
   margin: 0 0 20px;
-  font-size: clamp(42px, 4.1vw, 52px);
-  line-height: 1.08;
-  letter-spacing: -.045em;
+  font-size: var(--title-size);
 }
 .home-booking {
   width: min(100%, 396px);
@@ -85,12 +79,6 @@
   gap: 16px;
   padding-inline: 15px 6px;
 }
-.home-booking .place-input:focus-within {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
-}
-.home-booking .place-popup { color: #151515; }
-.home-booking .place-message, .home-booking .place-retry { color: #e2e2e2; }
 .home-booking .place-feedback { padding: 0 2px 5px; }
 .home-booking .home-location-button {
   display: grid;
@@ -170,13 +158,10 @@
   white-space: nowrap;
 }
 .home-collage-cta a:hover, .home-service-copy a:hover { background: #dedede; }
-.home-section { padding-block: 64px; }
+.home-section { padding-block: var(--section-space); }
 .home-services { padding-bottom: 0; }
 .home-section h2 {
   margin: 0 0 28px;
-  font-size: clamp(28px, 3.1vw, 36px);
-  line-height: 1.15;
-  letter-spacing: -.035em;
 }
 .home-service-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .home-service-card {
@@ -186,8 +171,8 @@
   gap: 14px;
   min-height: 156px;
   padding: 16px;
-  border-radius: 8px;
-  background: #262626;
+  border-radius: var(--radius);
+  background: var(--raised);
 }
 .home-service-copy h3, .home-steps h3 { margin: 0 0 8px; font-size: 16px; }
 .home-service-copy p { max-width: 210px; min-height: 40px; margin: 0 0 16px; font-size: 13px; line-height: 1.45; color: #f2f2f2; }
@@ -198,8 +183,8 @@
   width: clamp(58px, 7vw, 88px);
   aspect-ratio: 1;
   border-radius: 22%;
-  background: #363636;
-  color: #fff;
+  background: var(--raised-hover);
+  color: var(--ink);
 }
 .home-steps {
   display: grid;
@@ -234,7 +219,7 @@
 .home-feature-reverse .home-feature-copy { order: -1; }
 .home-feature h2 { margin-bottom: 14px; }
 .home-feature p { margin-bottom: 24px; }
-.home-downloads { background: #171717; }
+.home-downloads { background: var(--surface); }
 .home-download-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .home-download-card {
   display: grid;
@@ -276,7 +261,6 @@
   .home-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 540px) {
-  .home-content { width: calc(100% - 32px); }
   .home-service-grid { grid-template-columns: minmax(0, 1fr); }
   .home-service-card { min-height: 140px; }
   .home-collage-cta { inset: auto 10px 10px; padding: 10px; }

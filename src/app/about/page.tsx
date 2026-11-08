@@ -14,7 +14,7 @@ export default function AboutPage() {
         <p>Lookiy is a Uganda-focused journey platform for riders, passengers, businesses, and the places between them — built for the way Uganda actually moves and pays.</p>
         <Link href="/ride" className="primary-button inline-button">Plan a journey <ArrowRight size={18} /></Link>
       </div>
-      <div className="inner-visual"><Image src="/images/cars.jpg" fill alt="Illustrated traffic on a city road" sizes="(max-width: 800px) 100vw, 45vw" /></div>
+      <div className="inner-visual"><Image src="/images/cars.jpg" fill alt="Illustrated traffic on a city road" sizes="(max-width: 800px) 100vw, 45vw" priority /></div>
     </section>
 
     <section className="info-grid content-width">
@@ -37,7 +37,7 @@ export default function AboutPage() {
     </section>
 
     <section className="content-width">
-      <div className="section-heading" style={{ marginTop: 90 }}><span className="eyebrow">THE EXPERIENCE</span><h2>Made for every journey.</h2></div>
+      <div className="section-heading"><span className="eyebrow">THE EXPERIENCE</span><h2>Made for every journey.</h2></div>
       <div className="visual-grid">
         <figure><Image src="/images/passenger.jpg" fill alt="A passenger on a Lookiy journey" /><figcaption>Travel with confidence</figcaption></figure>
         <figure><Image src="/images/ride.jpg" fill alt="A Lookiy ride at dusk" /><figcaption>Every ride, covered</figcaption></figure>
