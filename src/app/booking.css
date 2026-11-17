@@ -55,12 +55,20 @@
 .place-input svg { flex: none; pointer-events: none; }
 .place-input input { border: 0; outline: none; background: transparent; min-width: 0; flex: 1; width: 100%; min-height: 50px; font-size: 16px; color: #000; }
 .place-input input::placeholder { color: #595959; opacity: 1; }
-.place-popup { position: absolute; top: calc(100% + 4px); inset-inline: 0; z-index: 2; border: 1px solid #dedede; border-radius: var(--radius); background: var(--ink); color: var(--field-ink); color-scheme: light; box-shadow: 0 10px 28px #0002; }
-.place-options { max-height: min(280px, 45dvh); overflow: auto; overscroll-behavior: contain; }
+.place-popup { position: absolute; top: calc(100% + 4px); inset-inline: 0; z-index: 2; border: 1px solid #dedede; border-radius: var(--radius); background: var(--ink); color: var(--field-ink); color-scheme: light; box-shadow: 0 10px 28px #0002; max-height: min(560px, 65dvh); overflow: auto; overscroll-behavior: contain; }
+.place-result-section + .place-result-section { border-top: 1px solid #dedede; }
+.place-result-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px 8px; color: #292929; font-size: 13px; }
+.place-result-heading span { color: #5e5e5e; font: normal 400 12px Roboto, sans-serif; white-space: nowrap; }
+.place-options { max-height: min(280px, 34dvh); overflow: auto; overscroll-behavior: contain; }
 .place-options [role="option"] { display: flex; align-items: center; gap: 12px; padding: 11px 14px; min-height: 48px; border-bottom: 1px solid #eee; font-size: 15px; line-height: 1.35; cursor: pointer; }
 .place-options [role="option"] svg { flex: none; }
+.place-options [role="option"] > span { min-width: 0; display: grid; gap: 2px; }
+.place-options [role="option"] strong { font: inherit; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.place-options [role="option"] small { color: #686868; font-size: 12px; line-height: 1.35; }
 .place-options [role="option"]:hover, .place-options [aria-selected="true"] { background: #eee; }
 .place-credit { padding: 7px 14px; color: #515151; font-size: 12px; text-align: right; }
+.place-empty { margin: 0; padding: 0 14px 12px; color: #686868; font-size: 13px; line-height: 1.35; }
+.place-popup > .place-retry { margin: 0 14px 8px; color: #1769e8; }
 .place-message { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
 .place-feedback { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 10px; }
 .place-retry { min-height: 44px; padding: 0; background: none; border: 0; color: inherit; text-decoration: underline; font-weight: 650; }

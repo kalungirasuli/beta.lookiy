@@ -43,7 +43,9 @@ function RideForm() {
   const [pricingMode, setPricingMode] = useState<'NEGOTIATION' | 'SYSTEM_PRICE'>('SYSTEM_PRICE');
   const [offer, setOffer] = useState<string | null>(null);
   const [payment, setPayment] = useState<'CASH' | 'WALLET'>('CASH');
-  const [route, setRoute] = useState<Route | null>(null);
+  const [routeResult, setRouteResult] = useState<{ key: string; route: Route } | null>(null);
+  const [routeError, setRouteError] = useState('');
+  const [routeRevision, setRouteRevision] = useState(0);
   const [availability, setAvailability] = useState<{ key: string; options: AvailableVehicle[]; error?: string; hasListings?: boolean } | null>(null);
   const [quote, setQuote] = useState<{ key: string; estimate?: Estimate; error?: string } | null>(null);
   const [revision, setRevision] = useState(0);
@@ -53,6 +55,9 @@ function RideForm() {
   const submitting = useRef(false);
   const [error, setError] = useState('');
   const pickupLat = pickup?.lat, pickupLng = pickup?.lng;
+  const destinationLat = destination?.lat, destinationLng = destination?.lng;
+  const routeKey = `${pickupLat},${pickupLng}|${destinationLat},${destinationLng}`;
+  const route = routeResult?.key === routeKey ? routeResult.route : null;
   const passengerCount = purpose === 'IN_PERSON_MOVEMENT' ? passengers : undefined;
   const availabilityKey = `${pickupLat},${pickupLng}|${purpose}|${passengerCount}|${revision}`;
   const currentAvailability = availability?.key === availabilityKey ? availability : null;
@@ -71,7 +76,17 @@ function RideForm() {
       if (draft) {
         const saved = JSON.parse(draft);
         if (Date.now() - Number(saved.createdAt || 0) < 20 * 60 * 1000) {
-          if (saved.pickup) { setPickup(saved.pickup); setPickupText(saved.pickup.address || 'Current location'); }
+          if (saved.pickup) {
+            setPickup(saved.pickup);
+            setPickupText(saved.pickup.address || 'Current location');
+            if (saved.pickup.source === 'gps') {
+              setMeasuredLocation(saved.pickup);
+              setConfirmed((saved.pickup.accuracy ?? Infinity) <= 30);
+              if (!saved.pickup.address || saved.pickup.address === 'Current location') {
+                resolvePickupAddress(saved.pickup);
+              }
+            }
+          }
           if (saved.destination) { setDestination(saved.destination); setDestinationText(saved.destination.address || 'Destination'); }
           if (!saved.pickup && typeof saved.pickupText === 'string') setPickupText(saved.pickupText);
           if (!saved.destination && typeof saved.destinationText === 'string') setDestinationText(saved.destinationText);
@@ -85,13 +100,29 @@ function RideForm() {
   }, [session]);
 
   useEffect(() => {
-    setRoute(null);
-    if (!pickup || !destination || session !== 'signed') { setRouting(false); return; }
-    let active = true;
-    setRouting(true); setError('');
-    post<Route>('/api/client/geo/route', { origin: { lat: pickup.lat, lng: pickup.lng }, destination: { lat: destination.lat, lng: destination.lng } }).then(value => { if (active) setRoute(value); }).catch(e => { if (active) setError(e.message); }).finally(() => { if (active) setRouting(false); });
-    return () => { active = false; };
-  }, [pickup, destination, session]);
+    setRouteResult(null);
+    setRouteError('');
+    if (pickupLat == null || pickupLng == null || destinationLat == null || destinationLng == null || session !== 'signed') {
+      setRouting(false);
+      return;
+    }
+    const controller = new AbortController();
+    setRouting(true);
+    api<Route>('/api/client/geo/route', {
+      method: 'POST',
+      body: JSON.stringify({ origin: { lat: pickupLat, lng: pickupLng }, destination: { lat: destinationLat, lng: destinationLng } }),
+      signal: controller.signal,
+    }).then(value => {
+      if (controller.signal.aborted) return;
+      if (!value.polyline) throw new Error('No road route was returned. Try another pickup or destination.');
+      setRouteResult({ key: routeKey, route: value });
+    }).catch(e => {
+      if (!controller.signal.aborted) setRouteError(e.message);
+    }).finally(() => {
+      if (!controller.signal.aborted) setRouting(false);
+    });
+    return () => controller.abort();
+  }, [pickupLat, pickupLng, destinationLat, destinationLng, routeKey, session, routeRevision]);
 
   useEffect(() => {
     if (pickupLat == null || pickupLng == null || session !== 'signed') return;
@@ -113,6 +144,18 @@ function RideForm() {
     return () => controller.abort();
   }, [pickup, destination, vehicle, purpose, passengerCount, quoteKey]);
 
+  function resolvePickupAddress(point: Point, signal?: AbortSignal) {
+    const version = pickupVersion.current;
+    void api<{ formattedAddress?: string }>('/api/client/geo/reverse-geocode', {
+      method: 'POST', body: JSON.stringify({ lat: point.lat, lng: point.lng }), signal,
+    }).then(found => {
+      if (version === pickupVersion.current && found.formattedAddress) {
+        setPickup({ ...point, address: found.formattedAddress });
+        setPickupText(found.formattedAddress);
+      }
+    }).catch(() => undefined);
+  }
+
   async function locate() {
     cancelLocation(); const version = pickupVersion.current;
     const controller = new AbortController(); locationRequest.current = controller;
@@ -125,9 +168,7 @@ function RideForm() {
       if (lat < -1.5 || lat > 4.3 || lng < 29.5 || lng > 35.1) throw new Error('Choose a pickup within Uganda.');
       const point: Point = { ...sample, source: 'gps', address: 'Current location' };
       setMeasuredLocation(point); setPickup(point); setPickupText(point.address!); setConfirmed(sample.accuracy! <= 30);
-      void post<{ formattedAddress?: string }>('/api/client/geo/reverse-geocode', {lat,lng}).then(found => {
-        if (version === pickupVersion.current && found.formattedAddress) { setPickup({ ...point, address: found.formattedAddress }); setPickupText(found.formattedAddress); }
-      }).catch(() => undefined);
+      resolvePickupAddress(point, controller.signal);
     } catch (error) { if (version === pickupVersion.current && !controller.signal.aborted) setError(error instanceof Error ? error.message : 'Location is unavailable.'); }
     finally { if (version === pickupVersion.current) setLocating(false); }
   }
@@ -191,6 +232,7 @@ function RideForm() {
     <section className="booking-map" aria-label="Route preview">
       <RouteMap pickup={pickup} destination={destination} route={route} currentLocation={measuredLocation} onPickupChange={point => { cancelLocation(); setPickup({ ...point, source: 'manual', address: 'Pinned pickup' }); setPickupText('Pinned pickup'); setConfirmed(true); }} />
       {routing && <p className="loading" role="status">Preparing your route…</p>}
+      {routeError && <p className="form-error" role="alert">{routeError} <button type="button" className="place-retry" onClick={() => setRouteRevision(value => value + 1)}>Retry route</button></p>}
       {route && <div className="result-line" role="status"><span>Estimated travel</span><strong>{route.distance?.text} · {route.duration?.text}</strong></div>}
     </section>
     <section className="workspace-card form-stack booking-options" aria-label="Ride options">

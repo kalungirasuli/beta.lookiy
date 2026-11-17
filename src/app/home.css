@@ -80,7 +80,7 @@
   padding-inline: 15px 6px;
 }
 .home-booking .place-feedback { padding: 0 2px 5px; }
-.home-booking .home-location-button {
+.hero-booking .home-location-button {
   display: grid;
   place-items: center;
   align-self: center;

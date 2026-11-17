@@ -22,7 +22,7 @@ export function loadGoogleMaps(key: string): Promise<void> {
       const timer = setTimeout(fail, 12000);
       window.gm_authFailure = () => { authDenied = true; window.dispatchEvent(new Event(mapsAuthFailureEvent)); };
       window.__lookiyMapsLoaded = () => { clearTimeout(timer); resolve(); };
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&libraries=geometry&loading=async&callback=__lookiyMapsLoaded`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&loading=async&callback=__lookiyMapsLoaded`;
       script.async = true;
       script.onerror = fail;
       document.head.appendChild(script);

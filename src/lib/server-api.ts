@@ -51,6 +51,17 @@ export function clearSessionCookies(response: NextResponse) {
   response.cookies.delete(DEVICE_COOKIE);
 }
 
+const renewals = new Map<string, ReturnType<typeof gateway>>();
+
+function renewSession(refreshToken: string) {
+  const pending = renewals.get(refreshToken);
+  if (pending) return pending;
+  const renewal = gateway('/auth/refresh', { method: 'POST', body: JSON.stringify({ refreshToken }) });
+  renewals.set(refreshToken, renewal);
+  void renewal.finally(() => { renewals.delete(refreshToken); });
+  return renewal;
+}
+
 export async function withSession(request: NextRequest, path: string, init: RequestInit) {
   const access = request.cookies.get(ACCESS_COOKIE)?.value;
   const refresh = request.cookies.get(REFRESH_COOKIE)?.value;
@@ -61,9 +72,10 @@ export async function withSession(request: NextRequest, path: string, init: Requ
   let newTokens: any;
   let renewalRejected = false;
   if (result.status === 401 && refresh) {
-    const renewed = await gateway('/auth/refresh', { method: 'POST', body: JSON.stringify({ refreshToken: refresh }) });
-    if (renewed.status === 200 && (renewed.body.data as any)?.accessToken) {
-      newTokens = renewed.body.data;
+    const renewed = await renewSession(refresh);
+    const tokens = renewed.body.data as { accessToken?: string; refreshToken?: string } | undefined;
+    if (renewed.status === 200 && tokens?.accessToken && tokens.refreshToken) {
+      newTokens = tokens;
       result = await gateway(path, init, newTokens.accessToken);
     } else if (renewed.status >= 500) {
       result = renewed;
@@ -71,7 +83,9 @@ export async function withSession(request: NextRequest, path: string, init: Requ
       renewalRejected = true;
     }
   }
-  const response = jsonReply(result.status, result.body);
+  const response = result.status === 401
+    ? jsonReply(401, { success: false, message: 'Your Lookiy session ended. Please sign in again.' })
+    : jsonReply(result.status, result.body);
   if (newTokens) setSessionCookies(response, newTokens, signature);
   else if (renewalRejected) {
     // Another request may have rotated this token and be setting the new cookies.

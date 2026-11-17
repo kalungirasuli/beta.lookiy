@@ -1,4 +1,4 @@
-export type Place = { lat: number; lng: number; formattedAddress: string; placeId?: string };
+export type Place = { lat?: number; lng?: number; formattedAddress: string; placeId?: string; primaryText?: string; secondaryText?: string };
 export type Point = { lat: number; lng: number; address?: string; accuracy?: number; sampleTimestamp?: number; source?: 'gps' | 'manual' | 'place' };
 export type Route = { distance?: { text: string; value: number }; duration?: { text: string; value: number }; polyline?: string | null; mode?: string };
 export type Journey = {
@@ -13,33 +13,32 @@ export class ApiError extends Error {
 }
 
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const response = await fetch(path, { ...init, headers: { 'Content-Type': 'application/json', ...init.headers }, credentials: 'same-origin', cache: 'no-store' });
-  const envelope = await response.json().catch(() => null);
-  if (!response.ok || !envelope?.success) {
+  // Refresh-token rotation allows exactly one request to renew a session. A
+  // second request can therefore lose that race even though the browser has
+  // received the winning response's replacement cookies. Retry briefly for
+  // that explicit, side-effect-free gateway signal before showing a sign-out.
+  const retryDelays = [150, 350, 700, 1500, 2500];
+  for (let attempt = 0; ; attempt++) {
+    const response = await fetch(path, { ...init, headers: { 'Content-Type': 'application/json', ...init.headers }, credentials: 'same-origin', cache: 'no-store' });
+    const envelope = await response.json().catch(() => null);
+    const sessionRetry = response.headers.get('x-lookiy-session-retry') === '1';
+    if (response.ok && envelope?.success) return envelope.data as T;
+    const delay = retryDelays[attempt];
+    if (response.status === 401 && sessionRetry && delay !== undefined) {
+      await new Promise(resolve => setTimeout(resolve, delay));
+      continue;
+    }
     const raw = envelope?.message;
     const message = Array.isArray(raw) ? raw.join(' ') : raw || 'Unable to complete this request.';
-    throw new ApiError(message, response.status, response.headers.get('x-lookiy-session-retry') === '1');
+    throw new ApiError(message, response.status, sessionRetry);
   }
-  return envelope.data as T;
 }
 
 let sessionCheck: Promise<{ _id: string }> | null = null;
 
 export function getWebSession(force = false) {
-  async function check() {
-    for (const delay of [150, 300]) {
-      try {
-        return await api<{ _id: string }>('/api/session/me');
-      } catch (error) {
-        if (!(error instanceof ApiError) || !error.sessionRetry) throw error;
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
-    return api<{ _id: string }>('/api/session/me');
-  }
-
   if (force || !sessionCheck) {
-    const pending = check().finally(() => { if (sessionCheck === pending) sessionCheck = null; });
+    const pending = api<{ _id: string }>('/api/session/me').finally(() => { if (sessionCheck === pending) sessionCheck = null; });
     sessionCheck = pending;
   }
   return sessionCheck;

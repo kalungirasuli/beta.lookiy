@@ -5,6 +5,7 @@ import { MapPinned, LocateFixed } from 'lucide-react';
 import { api, Point, Route } from '@/lib/client-api';
 import { loadGoogleMaps, mapsAuthFailureEvent } from '@/lib/google-maps';
 import { STREET_ZOOM, mapFrame } from '../../shared/map-camera';
+import { decodeRoute } from '../../shared/polyline';
 
 export function RouteMap({ pickup, destination, currentLocation, onPickupChange, route, covered, className = '' }: { pickup: Point | null; destination: Point | null; currentLocation?: Point | null; onPickupChange?: (point: Point) => void; route?: Route | null; covered?: Point[]; className?: string }) {
   const node = useRef<HTMLDivElement>(null), map = useRef<google.maps.Map | null>(null), panned = useRef(false);
@@ -32,7 +33,7 @@ export function RouteMap({ pickup, destination, currentLocation, onPickupChange,
       if (!config.key) { setStatus('missing'); return; }
       await loadGoogleMaps(config.key);
       if (controller.signal.aborted || denied || !node.current) return;
-      map.current = new google.maps.Map(node.current, { center: initialFrame.current.center, zoom: STREET_ZOOM, disableDefaultUI: true, zoomControl: true, mapId: config.mapId || undefined, clickableIcons: true, mapTypeId: google.maps.MapTypeId.ROADMAP, colorScheme: google.maps.ColorScheme.LIGHT });
+      map.current = new google.maps.Map(node.current, { center: initialFrame.current.center, zoom: STREET_ZOOM, disableDefaultUI: true, zoomControl: true, mapId: config.mapId || undefined, clickableIcons: true, mapTypeId: 'roadmap', colorScheme: google.maps.ColorScheme?.LIGHT });
       map.current.addListener('dragstart', () => { panned.current = true; });
       if (!denied) setStatus('ready');
     }).catch(() => { if (!controller.signal.aborted) setStatus('error'); });
@@ -50,21 +51,17 @@ export function RouteMap({ pickup, destination, currentLocation, onPickupChange,
   }, [ready]);
   useEffect(() => {
     if (!ready || !map.current) return;
-    const overlays: (google.maps.Marker | google.maps.Polyline)[] = [], bounds = new google.maps.LatLngBounds();
+    const overlays: (google.maps.Marker | google.maps.Polyline)[] = [];
+    const path = route?.polyline ? decodeRoute(route.polyline).map(point => ({ lat: point.latitude, lng: point.longitude })) : [];
     if (pickup) {
       const marker = new google.maps.Marker({ map: map.current, position: pickup, title: 'Pickup · drag to adjust', draggable: !!onPickupChange });
       marker.addListener('dragend', (event: google.maps.MapMouseEvent) => { if (event.latLng) pickupChanged.current?.({ lat: event.latLng.lat(), lng: event.latLng.lng(), source: 'manual' }); });
-      overlays.push(marker); bounds.extend(pickup);
+      overlays.push(marker);
     }
-    if (destination) { overlays.push(new google.maps.Marker({ map: map.current, position: destination, title: 'Destination' })); bounds.extend(destination); }
-    if (route?.polyline) {
-      const path = google.maps.geometry.encoding.decodePath(route.polyline);
-      overlays.push(new google.maps.Polyline({ map: map.current, path, strokeColor: '#1769e8', strokeOpacity: .93, strokeWeight: 5 }));
-      path.forEach(point => bounds.extend(point));
-    }
+    if (destination) overlays.push(new google.maps.Marker({ map: map.current, position: destination, title: 'Destination' }));
+    if (path.length > 1) overlays.push(new google.maps.Polyline({ map: map.current, path, strokeColor: '#007AFF', strokeOpacity: .95, strokeWeight: 5 }));
     if (!panned.current && node.current?.clientWidth && node.current.clientHeight) {
-      const routePoints = route?.polyline ? google.maps.geometry.encoding.decodePath(route.polyline).map(p => ({ lat: p.lat(), lng: p.lng() })) : [];
-      const frame = mapFrame(pickup, destination, currentLocation, [], routePoints);
+      const frame = mapFrame(pickup, destination, currentLocation, [], path);
       if (!frame.single) { const frameBounds = new google.maps.LatLngBounds(); frame.points.forEach(point => frameBounds.extend(point)); map.current.fitBounds(frameBounds, 35); }
       else { map.current.setCenter(frame.center); map.current.setZoom(STREET_ZOOM); }
     }

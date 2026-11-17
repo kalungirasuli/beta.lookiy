@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { type FormEvent, useEffect, useRef, useState } from 'react';
 import { ArrowRight, Clock3, LoaderCircle, Navigation } from 'lucide-react';
-import { getWebSession, ApiError, type Point } from '@/lib/client-api';
+import { api, getWebSession, ApiError, type Point } from '@/lib/client-api';
 import { browserLocation } from '@/lib/current-location';
 import { PlaceField } from './place-field';
 
@@ -41,7 +41,17 @@ export function HeroSearch({ next = '/ride', initialPickup = '', initialDestinat
       const position = await browserLocation(navigator.geolocation, controller.signal);
       if (controller.signal.aborted) return;
       if (position.lat < -1.5 || position.lat > 4.3 || position.lng < 29.5 || position.lng > 35.1) throw new Error('Choose a pickup within Uganda.');
-      selectPickup({ ...position, source: 'gps', address: 'Current location' });
+      const point: Point = { ...position, source: 'gps', address: 'Current location' };
+      setPickup(point); setPickupText('Current location'); setError('');
+      // A coordinate is usable immediately. Resolve the display name in the
+      // background, just as the mobile journey planner does.
+      void api<{ formattedAddress?: string }>('/api/client/geo/reverse-geocode', { method: 'POST', body: JSON.stringify({ lat: point.lat, lng: point.lng }), signal: controller.signal })
+        .then(found => {
+          const address = found.formattedAddress;
+          if (!controller.signal.aborted && address) {
+            setPickup({ ...point, address }); setPickupText(address);
+          }
+        }).catch(() => undefined);
     } catch (error) {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : 'Could not find your location. Search for a pickup instead.');
     } finally {
@@ -78,7 +88,7 @@ export function HeroSearch({ next = '/ride', initialPickup = '', initialDestinat
     <div className="place-pair">
       <PlaceField kind="pickup" label="Pickup location" placeholder={homepage ? 'Pickup location' : 'Enter pickup location'} value={pickupText} selected={pickup}
         fieldId={homepage ? 'home-pickup' : undefined}
-        action={homepage && <button type="button" className="home-location-button" aria-label="Use my current location" disabled={locating || checking} onClick={useCurrentLocation}>
+        action={<button type="button" className="home-location-button" aria-label="Use my current location" disabled={locating || checking} onClick={useCurrentLocation}>
           {locating ? <LoaderCircle className="spin" size={20} aria-hidden /> : <Navigation size={20} fill="currentColor" aria-hidden />}
         </button>}
         onChange={text => { locationRequest.current?.abort(); setLocating(false); setPickupText(text); setPickup(null); setError(''); }}

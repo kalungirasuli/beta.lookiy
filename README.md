@@ -24,7 +24,7 @@ Browser requests go to this Next.js app, which forwards a small allowlist of end
 | `APP_STORE_URL` | Config | Optional published Apple App Store listing URL. |
 | `PLAY_STORE_URL` | Config | Optional published Google Play listing URL. |
 
-Use these names as written. No `NEXT_PUBLIC_` variables are required. `/api/maps/config` verifies the current web session before returning the website-restricted browser key at runtime. The browser can inspect that key in its map requests. The backend `GOOGLE_MAPS_API_KEY` belongs only to geo-service, which handles public search and authenticated route previews. Web search uses Geocoding API and route previews use Routes API. Register each allowed web-client origin separately in Google Cloud for Maps referrers and the Web OAuth client's JavaScript origins.
+Use these names as written. No `NEXT_PUBLIC_` variables are required. `/api/maps/config` verifies the current web session before returning the website-restricted browser key at runtime. The browser can inspect that key in its map requests. The backend `GOOGLE_MAPS_API_KEY` belongs only to geo-service. Allow Places API (New) for autocomplete and place details, Geocoding API for address lookup, and Routes API for road previews on that key. Register each allowed web-client origin separately in Google Cloud for Maps referrers and the Web OAuth client's JavaScript origins.
 
 ## Scope
 
