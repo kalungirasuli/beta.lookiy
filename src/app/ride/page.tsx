@@ -59,7 +59,7 @@ function RideForm() {
   const routeKey = `${pickupLat},${pickupLng}|${destinationLat},${destinationLng}`;
   const route = routeResult?.key === routeKey ? routeResult.route : null;
   const passengerCount = purpose === 'IN_PERSON_MOVEMENT' ? passengers : undefined;
-  const availabilityKey = `${pickupLat},${pickupLng}|${purpose}|${passengerCount}|${revision}`;
+  const availabilityKey = `${pickupLat},${pickupLng}|${destinationLat},${destinationLng}|${purpose}|${passengerCount}|${revision}`;
   const currentAvailability = availability?.key === availabilityKey ? availability : null;
   const vehicle = currentAvailability?.options.find(option => option.catalogSpecificationId === vehicleId);
   const quoteKey = `${availabilityKey}|${vehicleId}|${destination?.lat},${destination?.lng}`;
@@ -128,11 +128,12 @@ function RideForm() {
     if (pickupLat == null || pickupLng == null || session !== 'signed') return;
     const controller = new AbortController();
     const query = new URLSearchParams({ pickupLat: String(pickupLat), pickupLng: String(pickupLng), journeyPurpose: purpose, passengerCount: String(passengerCount ?? 0) });
+    if (destinationLat != null && destinationLng != null) { query.set('destinationLat', String(destinationLat)); query.set('destinationLng', String(destinationLng)); }
     api<{ options: AvailableVehicle[]; hasVehicleListings?: boolean }>(`/api/client/operators/vehicle-availability?${query}`, { signal: controller.signal })
       .then(data => { if (!controller.signal.aborted) setAvailability({ key: availabilityKey, options: data.options.filter(option => option.available), hasListings: data.hasVehicleListings }); })
       .catch(() => { if (!controller.signal.aborted) setAvailability({ key: availabilityKey, options: [], error: 'Could not check nearby vehicles.' }); });
     return () => controller.abort();
-  }, [pickupLat, pickupLng, purpose, passengerCount, availabilityKey, session]);
+  }, [pickupLat, pickupLng, destinationLat, destinationLng, purpose, passengerCount, availabilityKey, session]);
 
   useEffect(() => {
     if (!pickup || !destination || !vehicle) return;
