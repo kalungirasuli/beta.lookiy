@@ -33,7 +33,7 @@ export function locationIssue(sample: LocationSample, previous?: LocationSample 
 export class LocationSampleFilter {
   lastReliable: LocationSample | null = null;
   private pending: LocationSample | null = null;
-  constructor(private options: { rejectMocked?: boolean } = {}) {}
+  constructor(private options: { rejectMocked?: boolean; maxAccuracy?: number } = {}) {}
   accept(sample: LocationSample, now = Date.now()): boolean {
     const issue = locationIssue(sample, this.lastReliable, { ...this.options, now });
     if (issue === 'JUMP') {

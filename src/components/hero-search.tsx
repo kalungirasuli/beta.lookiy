@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { type FormEvent, useEffect, useRef, useState } from 'react';
 import { ArrowRight, Clock3, LoaderCircle, Navigation } from 'lucide-react';
 import { api, getWebSession, ApiError, type Point } from '@/lib/client-api';
-import { browserLocation } from '@/lib/current-location';
+import { browserLocation, locationNeedsConfirmation } from '@/lib/current-location';
 import { PlaceField } from './place-field';
 
 export function HeroSearch({ next = '/ride', initialPickup = '', initialDestination = '', homepage = false }: { next?: string; initialPickup?: string; initialDestination?: string; homepage?: boolean }) {
@@ -97,6 +97,7 @@ export function HeroSearch({ next = '/ride', initialPickup = '', initialDestinat
         onChange={text => { setDestinationText(text); setDestination(null); setError(''); }}
         onSelect={point => { setDestination(point); setDestinationText(point.address || 'Destination'); setError(''); }} />
     </div>
+    {pickup?.source === 'gps' && locationNeedsConfirmation(pickup) && <p className="form-hint" role="status">Using a recent device location. Check your pickup pin in the journey planner.</p>}
     {error && <p className="form-error" role="alert">{error}</p>}
     {homepage ? <div className="home-booking-actions">{submitButton}<Link href="/journeys">View your journey activity</Link></div> : submitButton}
   </form>;

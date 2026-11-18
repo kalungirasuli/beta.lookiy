@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
-import { browserLocation } from '@/lib/current-location';
+import { browserLocation, locationNeedsConfirmation } from '@/lib/current-location';
 import { ArrowRight, LoaderCircle, LocateFixed } from 'lucide-react';
 import { api, ApiError, getWebSession, Journey, Point, post, Route, ugx } from '@/lib/client-api';
 import { PlaceField } from '@/components/place-field';
@@ -81,7 +81,7 @@ function RideForm() {
             setPickupText(saved.pickup.address || 'Current location');
             if (saved.pickup.source === 'gps') {
               setMeasuredLocation(saved.pickup);
-              setConfirmed((saved.pickup.accuracy ?? Infinity) <= 30);
+              setConfirmed(!locationNeedsConfirmation(saved.pickup));
               if (!saved.pickup.address || saved.pickup.address === 'Current location') {
                 resolvePickupAddress(saved.pickup);
               }
@@ -168,7 +168,7 @@ function RideForm() {
       const { lat, lng } = sample;
       if (lat < -1.5 || lat > 4.3 || lng < 29.5 || lng > 35.1) throw new Error('Choose a pickup within Uganda.');
       const point: Point = { ...sample, source: 'gps', address: 'Current location' };
-      setMeasuredLocation(point); setPickup(point); setPickupText(point.address!); setConfirmed(sample.accuracy! <= 30);
+      setMeasuredLocation(point); setPickup(point); setPickupText(point.address!); setConfirmed(!locationNeedsConfirmation(sample));
       resolvePickupAddress(point, controller.signal);
     } catch (error) { if (version === pickupVersion.current && !controller.signal.aborted) setError(error instanceof Error ? error.message : 'Location is unavailable.'); }
     finally { if (version === pickupVersion.current) setLocating(false); }
@@ -178,7 +178,7 @@ function RideForm() {
     if (submitting.current) return;
     setError('');
     if (!pickup || !destination) { setError('Select a pickup and destination from the place suggestions.'); return; }
-    if (pickup.source === 'gps' && (pickup.accuracy ?? Infinity) > 30 && !confirmed) { setError('Confirm the approximate pickup pin or drag it to your exact meeting point.'); return; }
+    if (pickup.source === 'gps' && !confirmed) { setError('Confirm the approximate pickup pin or drag it to your exact meeting point.'); return; }
     if (!route) { setError('Wait for the route preview.'); return; }
     if (!vehicle || !estimate?.pricing) { setError('Choose an available vehicle and wait for its fare.'); return; }
     if (feeKey && acceptedFee !== feeKey) { setError('Confirm the Premium pickup fee to continue.'); return; }
@@ -227,8 +227,8 @@ function RideForm() {
       <PlaceField kind="destination" label="Dropoff location" value={destinationText} selected={destination} placeholder="Where are you going?" onChange={value => { setDestinationText(value); setDestination(null); }} onSelect={point => { setDestination(point); setDestinationText(point.address || 'Destination'); }}/>
     </div>
     <button type="button" className="secondary-button" onClick={locate} disabled={locating}><LocateFixed size={17} aria-hidden /> {locating ? 'Finding an accurate location…' : 'Use current location'}</button>
-    {pickup?.source === 'gps' && <p className="form-hint">GPS accuracy: about {Math.round(pickup.accuracy || 0)} m. Check your side of the road; drag the pickup pin to adjust it.</p>}
-    {pickup?.source === 'gps' && (pickup.accuracy ?? Infinity) > 30 && !confirmed && <button type="button" className="secondary-button" onClick={() => setConfirmed(true)}>Confirm this approximate pickup pin</button>}
+    {pickup?.source === 'gps' && <p className="form-hint">Your device placed you within about {Math.round(pickup.accuracy || 0)} m. Check the pin or move it to your pickup point.</p>}
+    {pickup?.source === 'gps' && !confirmed && <button type="button" className="secondary-button" onClick={() => setConfirmed(true)}>Confirm this approximate pickup pin</button>}
     </section>
     <section className="booking-map" aria-label="Route preview">
       <RouteMap pickup={pickup} destination={destination} route={route} currentLocation={measuredLocation} onPickupChange={point => { cancelLocation(); setPickup({ ...point, source: 'manual', address: 'Pinned pickup' }); setPickupText('Pinned pickup'); setConfirmed(true); }} />
