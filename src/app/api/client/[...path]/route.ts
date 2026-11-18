@@ -23,17 +23,17 @@ async function dispatch(req: NextRequest, path: string[], method: 'GET' | 'POST'
     const params = new URLSearchParams({ q: req.nextUrl.searchParams.get('q') || '', limit: '5' });
     const session = req.nextUrl.searchParams.get('sessionToken');
     if (session) params.set('sessionToken', session);
-    const result = await gateway(`/geo/public/search?${params}`);
+    const result = await gateway(`/geo/public/search?${params}`, { signal: req.signal }, undefined, 6500);
     return jsonReply(result.status, result.body);
   }
   if (method === 'GET' && joined === 'geo/place-details') {
     const params = new URLSearchParams({ id: req.nextUrl.searchParams.get('id') || '', sessionToken: req.nextUrl.searchParams.get('sessionToken') || '' });
-    const result = await gateway(`/geo/public/place-details?${params}`);
+    const result = await gateway(`/geo/public/place-details?${params}`, { signal: req.signal }, undefined, 6500);
     return jsonReply(result.status, result.body);
   }
   if (method === 'GET' && joined === 'businesses/search') {
     const params = new URLSearchParams({ q: req.nextUrl.searchParams.get('q') || '', limit: '8' });
-    const result = await gateway(`/geo/public/businesses?${params}`);
+    const result = await gateway(`/geo/public/businesses?${params}`, { signal: req.signal }, undefined, 5000);
     return jsonReply(result.status, result.body);
   }
   if (method === 'POST' && joined === 'geo/reverse-geocode') {

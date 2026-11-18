@@ -7,14 +7,14 @@ export const DEVICE_COOKIE = 'lookiy_web_signature';
 
 export type GatewayReply<T = unknown> = { success?: boolean; data?: T; message?: string | string[]; statusCode?: number };
 
-export async function gateway(path: string, init: RequestInit = {}, token?: string) {
+export async function gateway(path: string, init: RequestInit = {}, token?: string, timeoutMs = 12000) {
   const base = (process.env.API_GATEWAY_URL || 'http://localhost:3000').replace(/\/$/, '');
   try {
     const response = await fetch(base + path, {
       ...init,
       headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...init.headers },
       cache: 'no-store',
-      signal: AbortSignal.timeout(12000),
+      signal: init.signal ? AbortSignal.any([init.signal, AbortSignal.timeout(timeoutMs)]) : AbortSignal.timeout(timeoutMs),
     });
     const body = await response.json().catch(() => ({ message: 'The service returned an unreadable response.' })) as GatewayReply;
     return { status: response.status, body };

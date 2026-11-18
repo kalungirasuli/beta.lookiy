@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { Circle, MapPin, Square, Store } from 'lucide-react';
-import { api, type Place, type Point } from '@/lib/client-api';
+import { type Place, type Point } from '@/lib/client-api';
+import { newSearchSession, searchRequest } from '@/lib/search-request';
 
 type BusinessDestination = { businessId: string; businessName: string; category: string; address?: string; buildingName?: string; shopName?: string; floorNumber?: string; roomNumber?: string; lat: number; lng: number };
 type SearchOption = { kind: 'place' | 'business'; value: Place | BusinessDestination; title: string; subtitle?: string };
@@ -28,7 +29,7 @@ export function PlaceField({ label, value, selected, onChange, onSelect, placeho
   const id = fieldId || generatedId;
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
-  const [revision, setRevision] = useState(0);
+  const [placeRevision, setPlaceRevision] = useState(0), [businessRevision, setBusinessRevision] = useState(0);
   const [places, setPlaces] = useState<SearchResult<Place>>();
   const [businesses, setBusinesses] = useState<SearchResult<BusinessDestination>>();
   const [choosing, setChoosing] = useState(false);
@@ -49,28 +50,34 @@ export function PlaceField({ label, value, selected, onChange, onSelect, placeho
   useEffect(() => {
     if (!searching) return;
     const controller = new AbortController();
-    if (!searchSession.current && globalThis.crypto?.randomUUID) searchSession.current = globalThis.crypto.randomUUID();
+    if (!searchSession.current) searchSession.current = newSearchSession();
     const params = new URLSearchParams({ q: query });
     if (searchSession.current) params.set('sessionToken', searchSession.current);
     const placeTimer = setTimeout(async () => {
       try {
-        const data = await api<Place[]>(`/api/client/geo/search?${params}`, { signal: controller.signal });
-        const items = data.filter(place => place.formattedAddress && (place.placeId || (Number.isFinite(place.lat) && Number.isFinite(place.lng))));
+        const data = await searchRequest<Place[]>(`/api/client/geo/search?${params}`, controller.signal);
+        const items = data.filter(place => place.formattedAddress && place.placeId).map(({ placeId, formattedAddress, primaryText, secondaryText }) => ({ placeId, formattedAddress, primaryText, secondaryText }));
         if (!controller.signal.aborted) { setPlaces({ query, items }); setActive(-1); }
       } catch {
         if (!controller.signal.aborted) setPlaces({ query, items: [], error: true });
       }
-    }, 180);
+    }, 350);
+    return () => { clearTimeout(placeTimer); controller.abort(); };
+  }, [query, searching, placeRevision]);
+
+  useEffect(() => {
+    if (!searching) return;
+    const controller = new AbortController();
     const businessTimer = setTimeout(async () => {
       try {
-        const data = await api<BusinessDestination[]>(`/api/client/businesses/search?${new URLSearchParams({ q: query })}`, { signal: controller.signal });
+        const data = await searchRequest<BusinessDestination[]>(`/api/client/businesses/search?${new URLSearchParams({ q: query })}`, controller.signal);
         if (!controller.signal.aborted) setBusinesses({ query, items: data.filter(validBusiness) });
       } catch {
         if (!controller.signal.aborted) setBusinesses({ query, items: [], error: true });
       }
-    }, 300);
-    return () => { clearTimeout(placeTimer); clearTimeout(businessTimer); controller.abort(); };
-  }, [query, searching, revision]);
+    }, 400);
+    return () => { clearTimeout(businessTimer); controller.abort(); };
+  }, [query, searching, businessRevision]);
 
   function cancelSelection() {
     selectionRequest.current?.abort();
@@ -88,10 +95,10 @@ export function PlaceField({ label, value, selected, onChange, onSelect, placeho
       const place = option.value as Place;
       let { lat, lng } = place;
       let address = option.kind === 'place' ? place.formattedAddress : businessDestinationAddress(option.value as BusinessDestination);
-      if (option.kind === 'place' && (!Number.isFinite(lat) || !Number.isFinite(lng))) {
+      if (option.kind === 'place') {
         setChoosing(true);
         const params = new URLSearchParams({ id: place.placeId || '', sessionToken: searchSession.current });
-        const details = await api<Place>(`/api/client/geo/place-details?${params}`, { signal: controller.signal });
+        const details = await searchRequest<Place>(`/api/client/geo/place-details?${params}`, controller.signal);
         ({ lat, lng } = details);
         address = details.formattedAddress || address;
         searchSession.current = '';
@@ -142,7 +149,7 @@ export function PlaceField({ label, value, selected, onChange, onSelect, placeho
       </section>
       {choosing && <p className="place-empty" role="status">Finding the selected place…</p>}
       {selectionError && <p className="place-empty" role="alert">{selectionError}</p>}
-      {(currentPlaces?.error || currentBusinesses?.error) && <button className="place-retry" type="button" onClick={() => { setPlaces(undefined); setBusinesses(undefined); setRevision(value => value + 1); }}>Retry search</button>}
+      {(currentPlaces?.error || currentBusinesses?.error) && <button className="place-retry" type="button" onClick={() => { if (currentPlaces?.error) { setPlaces(undefined); setPlaceRevision(value => value + 1); } if (currentBusinesses?.error) { setBusinesses(undefined); setBusinessRevision(value => value + 1); } }}>Retry search</button>}
     </div>}
   </div>;
 }
